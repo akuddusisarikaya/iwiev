@@ -6,7 +6,13 @@ export default function LoginPage() {
   const [error, setError] = React.useState(null);
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
-  const nav = useNavigate()
+  const nav = useNavigate();
+
+  const handleEnter = (e) => {
+    if(e.key === "Enter"){
+      handleLogin();
+    }
+  }
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -26,29 +32,41 @@ export default function LoginPage() {
       });
       if (!response.ok) throw new Error("Hatalı giriş");
       const data = await response.json();
-      sessionStorage.setItem("token", data);
-      if(response.ok) nav("/adminhomepage");
+      sessionStorage.setItem("token", data.token);
+      if (response.ok) nav("/adminhomepage");
     } catch (error) {
       setError(error.message);
     }
   };
   return (
     <>
-      <div>
+      <div className="loginPage">
+        <h2>Login</h2>
         {error && <h3>{error}</h3>}
-        <textarea
+        <h5 className="loginlabel">Email:</h5>
+        <input
+          className="textField"
           key="email"
           label="Email"
           onChange={handleEmail}
           value={email}
-        ></textarea>
-        <textarea
+        ></input>
+        <br />
+        <h5 className="loginlabel">Password:</h5>
+        <input
+          className="textField"
           key="password"
           label="Password"
           onChange={handlePassword}
           value={password}
-        ></textarea>
-        <button onClick={handleLogin}> Giriş Yap </button>
+          type="password"
+          onKeyDown={handleEnter}
+        ></input>
+        <br />
+        <button className="button" onClick={handleLogin}>
+          {" "}
+          Login{" "}
+        </button>
       </div>
     </>
   );
