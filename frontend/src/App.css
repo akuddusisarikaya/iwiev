@@ -9,7 +9,7 @@ Açık Yeşil - Turkuaz : #acddda
 
 .header{
   display: block;
-  position: fixed;
+  position: absolute;
   place-items: center;
   top: 0;
   left: 0;
@@ -315,7 +315,9 @@ Açık Yeşil - Turkuaz : #acddda
 .modal-content {
   background-color: #fff;
   margin: 15% auto; 
+  margin-top: 5%;
   padding: 20px;
+  padding-top: 0;
   border: 1px solid #888;
   width: 90%;
   max-width: 500px; 
@@ -773,4 +775,123 @@ input:checked + .slider:before {
 .submit-button:hover{
   background-color: silver;
   border-radius: 1cap;
+}
+
+
+.h5container{
+  display: flex;
+  justify-content: center;
+}
+.interview-text-input{
+  margin-left: 10%;
+}
+.interview-text-field{
+  margin: 1% 5%;
+  width: 90%;
+  height: 30px;
+}
+
+.interview-page{
+  margin-top: 5%;
+}
+
+.interview-question-numb{
+  display: block;
+  position: relative;
+  margin-left: 5%;
+  margin-top: 5%;
+}
+
+.interview-text-area{
+  height: 10vh;
+  width: 90%;
+  margin-left: 5%;
+  margin-bottom: 5%;
+  color: black;
+  text-align: center;
+}
+.interview-video{
+  width: 90%;
+  margin-left: 5%;
+  margin-bottom: 5%;
+}
+.chekbox-container{
+  margin-top: 5%;
+}
+.interview-button{
+  margin-left: 25%;
+  margin-bottom: 5%;
+  width: 50%;
+  height: 5vh;
+  background-color: #3d8d88;
+  border: none;
+  border-radius: 2cap;
+}
+.interview-button:hover{
+  background-color: #acddda;
+  color: #f8ca55;
+}
+
+@media (max-width: 768px){
+  .h5container{
+    position: inherit;
+    display: flex;
+    justify-content: center;
+    margin: 5%;
+  }
+  .interview-page{
+    margin-top: 25%;
+  }
+  
+  .interview-question-numb{
+    display: block;
+    position: relative;
+    margin-top: 5%;
+  }
+  
+  .interview-text-area{
+    height: 10vh;
+    width: 85%;
+    margin-left: 5%;
+    margin-bottom: 10%;
+    color: black;
+    text-align: center;
+  }
+  .form-container{
+    margin-bottom: 10%;
+  }
+  
+  .interview-video{
+    width: 90%;
+    height: 25vh;
+    margin-left: 5%;
+    margin-bottom: 5%;
+  }
+  
+  .interview-button{
+    margin-left: 25%;
+    margin-bottom: 5%;
+    width: 50%;
+    height: 5vh;
+    background-color: #3d8d88;
+    border: none;
+    border-radius: 2cap;
+  }
+  .interview-button:hover{
+    background-color: #acddda;
+    color: #f8ca55;
+  }
+  .modal{
+    width: 100%;
+  }
+  .modal-content{
+    width: 80%;
+  }
+  .chekbox-container{
+    margin-bottom: 2%;
+  }
+  .modal-submit-button{
+    width: 35%;
+    margin: 0% 5%;
+  }
 }

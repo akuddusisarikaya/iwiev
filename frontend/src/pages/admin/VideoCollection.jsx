@@ -26,6 +26,9 @@ export default function VideoCollection() {
   const goVideo = () => {
     nav("/interviewvideo");
   };
+  const goBack = () => {
+    nav(-1)
+  }
   const Card = ({ name }) => (
     <div className="card">
       <h5>{name}</h5>
@@ -53,7 +56,7 @@ export default function VideoCollection() {
     <div>
       <AdminDrawer />
       <div className="adminDrawerOpen">
-        <button className="back-button">Back</button>
+        <button className="back-button" onClick={goBack}>Back</button>
         <div className="grid-container">
           {videoCardsData.map((card) => (
             <Card key={card.id} name={card.name} />

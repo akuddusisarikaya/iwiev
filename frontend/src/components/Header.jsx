@@ -7,7 +7,7 @@ export default function Header() {
   const [isLogin, setIsLogin] = React.useState(false);
 
   React.useEffect(() => {
-    if (location.pathname === "/") {
+    if (location.pathname === "/" /*|| location.pathname=== "/interviewpage"*/) {
       setIsLogin(true);
     }
   });
