@@ -4,9 +4,9 @@ import { verifyToken } from '../middleware/verifyToken'; // JWT doğrulama middl
 
 const router = express.Router();
 
-router.post('/creatinterviews', verifyToken, createInterview); // JWT doğrulaması ile mülakat oluşturma
-router.get('/getinterviews', verifyToken, getInterviews); // Mülakatları listeleme
-router.put('/updateinterviews/:id', verifyToken, updateInterviews); // Mülakat güncelleme
-router.delete('/deleteinterviews/:id', verifyToken, deleteInterviews); // Mülakat silme
+router.post('/creatinterview', verifyToken, createInterview); // JWT doğrulaması ile mülakat oluşturma
+router.get('/getinterview', verifyToken, getInterviews); // Mülakatları listeleme
+router.put('/updateinterview/:id', verifyToken, updateInterviews); // Mülakat güncelleme
+router.delete('/deleteinterview/:id', verifyToken, deleteInterviews); // Mülakat silme
 
 export default router;

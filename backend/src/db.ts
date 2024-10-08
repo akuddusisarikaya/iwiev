@@ -20,22 +20,6 @@ const connectDB = async () => {
       throw new Error('Veritabanı bağlantısı sağlanamadı.');
     }
 
-    // Veritabanındaki mevcut koleksiyonları kontrol et
-    const existingCollections = await db.listCollections().toArray();
-
-    // Gerekli koleksiyonların olup olmadığını kontrol et
-    const requiredCollections = ['interview', 'candidates', 'package', 'question' ]; // Koleksiyon isimleri
-    requiredCollections.forEach(async (collection) => {
-      const collectionExists = existingCollections.some((col) => col.name === collection);
-      
-      if (!collectionExists) {
-        await db.createCollection(collection);
-        console.log(`${collection} collection created`);
-      } else {
-        console.log(`${collection} collection already exists`);
-      }
-    });
-
   } catch (error) {
     console.error('MongoDB connection error:', error);
     process.exit(1); // Uygulamayı hata durumunda kapat

@@ -1,50 +1,49 @@
 import { Request, Response } from 'express';
-import Question from '../models/question'; // Question modelini içe aktar
+import Package from '../models/package';
 
 // Soru Paketi Oluşturma (Create)
-export const createQuestionPackage = async (req: Request, res: Response): Promise<void> => {
+export const createPackage = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id, name, question } = req.body;
+    const {  name, question } = req.body;
 
-    const newQuestionPackage = new Question({
-      id,
+    const newPackage = new Package({
       name,
       question,
     });
 
-    await newQuestionPackage.save();
-    res.status(201).json(newQuestionPackage);
+    await newPackage.save();
+    res.status(201).json(newPackage);
   } catch (error) {
     res.status(500).json({ message: 'Soru paketi oluşturulurken hata oluştu', error });
   }
 };
 
 // Tüm Soru Paketlerini Listeleme (Read)
-export const getQuestionPackages = async (req: Request, res: Response): Promise<void> => {
+export const getPackages = async (req: Request, res: Response): Promise<void> => {
   try {
-    const questionPackages = await Question.find();
-    res.status(200).json(questionPackages);
+    const packages = await Package.find();
+    res.status(200).json(packages);
   } catch (error) {
     res.status(500).json({ message: 'Soru paketleri getirilirken hata oluştu', error });
   }
 };
 
 // Belirli Bir Soru Paketini Güncelleme (Update)
-export const updateQuestionPackage = async (req: Request, res: Response): Promise<void> => {
+export const updatePackage = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   try {
-    const updatedQuestionPackage = await Question.findByIdAndUpdate(id, req.body, { new: true });
-    res.status(200).json(updatedQuestionPackage);
+    const updatedPackage = await Package.findByIdAndUpdate(id, req.body, { new: true });
+    res.status(200).json(updatedPackage);
   } catch (error) {
     res.status(500).json({ message: 'Soru paketi güncellenirken hata oluştu', error });
   }
 };
 
 // Soru Paketi Silme (Delete)
-export const deleteQuestionPackage = async (req: Request, res: Response): Promise<void> => {
+export const deletePackage = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   try {
-    await Question.findByIdAndDelete(id);
+    await Package.findByIdAndDelete(id);
     res.status(200).json({ message: 'Soru paketi başarıyla silindi' });
   } catch (error) {
     res.status(500).json({ message: 'Soru paketi silinirken hata oluştu', error });

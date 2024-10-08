@@ -22,4 +22,6 @@ const interviewSchema = new Schema<IInterview>({
   timestamps: true, // createdAt ve updatedAt alanları otomatik olarak eklenecek
 });
 
-export default model<IInterview>('Interview', interviewSchema);
+const Interview = model<IInterview>('Interview', interviewSchema);
+
+export default Interview

@@ -1,7 +1,6 @@
 import { Schema, model, Document } from 'mongoose';                                                                                                                                                                                                                                                             
 
-// Kullanıcı arayüzü oluşturma
-export interface IUser extends Document {
+export interface ICandidates extends Document {
     name: string;
     surname: string;
     email: string;
@@ -12,8 +11,7 @@ export interface IUser extends Document {
     activate: boolean;
   }
 
-  // Kullanıcı şeması
-const userSchema = new Schema<IUser>({
+const candidatesSchema = new Schema<ICandidates>({
   name: { type: String, required: true },
   surname: { type: String, required: true },
   email: { type: String, required: true, unique: true }, // Email'in benzersiz olması önemli
@@ -27,6 +25,6 @@ const userSchema = new Schema<IUser>({
 });
 
 // Modeli dışa aktar
-const Candidates = model<IUser>('Candidates', userSchema);
+const Candidates = model<ICandidates>('Candidates', candidatesSchema);
 
 export default Candidates;

@@ -31,8 +31,8 @@ export const getQuestionsByID = async (req: Request, res: Response): Promise<voi
 // Tüm Soruları Listeleme (Read)
 export const getQuestions = async (req: Request, res: Response): Promise<void> => {
   try {
-    const questions = await Question.find();
-    res.status(200).json(questions);
+    const question = await Question.find();
+    res.status(200).json(question);
   } catch (error) {
     res.status(500).json({ message: 'Sorular getirilirken hata oluştu', error });
   }

@@ -1,13 +1,13 @@
 import express from 'express';
-import { createQuestionPackage, getQuestionPackages, updateQuestionPackage, deleteQuestionPackage } from '../controllers/package';
+import { createPackage, getPackages, updatePackage, deletePackage } from '../controllers/package';
 import { verifyToken } from '../middleware/verifyToken'; // JWT doğrulama middleware
 
 const router = express.Router();
 
-router.post('/createpackages', verifyToken, createQuestionPackage); // JWT doğrulaması ile soru paketi oluşturma
-router.get('/getpackages', verifyToken, getQuestionPackages); // JWT doğrulaması ile tüm soru paketlerini listeleme
-router.get('/getpackages/:id', verifyToken, getQuestionPackages);
-router.put('/updatepackages/:id', verifyToken, updateQuestionPackage); // JWT doğrulaması ile soru paketini güncelleme
-router.delete('/deletepackages/:id', verifyToken, deleteQuestionPackage); // JWT doğrulaması ile soru paketini silme
+router.post('/createpackage', verifyToken, createPackage); // JWT doğrulaması ile soru paketi oluşturma
+router.get('/getpackage', verifyToken, getPackages); // JWT doğrulaması ile tüm soru paketlerini listeleme
+router.get('/getpackage/:id', verifyToken, getPackages);
+router.put('/updatepackage/:id', verifyToken, updatePackage); // JWT doğrulaması ile soru paketini güncelleme
+router.delete('/deletepackage/:id', verifyToken, deletePackage); // JWT doğrulaması ile soru paketini silme
 
 export default router;
