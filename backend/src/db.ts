@@ -24,7 +24,7 @@ const connectDB = async () => {
     const existingCollections = await db.listCollections().toArray();
 
     // Gerekli koleksiyonların olup olmadığını kontrol et
-    const requiredCollections = ['Interviews', 'Candidates', 'Package', 'Question' ]; // Koleksiyon isimleri
+    const requiredCollections = ['interview', 'candidates', 'package', 'question' ]; // Koleksiyon isimleri
     requiredCollections.forEach(async (collection) => {
       const collectionExists = existingCollections.some((col) => col.name === collection);
       

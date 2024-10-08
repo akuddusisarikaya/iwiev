@@ -4,9 +4,10 @@ import { verifyToken } from '../middleware/verifyToken'; // JWT doğrulama middl
 
 const router = express.Router();
 
-router.post('/createquestion-packages', verifyToken, createQuestionPackage); // JWT doğrulaması ile soru paketi oluşturma
-router.get('/getquestion-packages', verifyToken, getQuestionPackages); // JWT doğrulaması ile tüm soru paketlerini listeleme
-router.put('/updatequestion-packages/:id', verifyToken, updateQuestionPackage); // JWT doğrulaması ile soru paketini güncelleme
-router.delete('/deletequestion-packages/:id', verifyToken, deleteQuestionPackage); // JWT doğrulaması ile soru paketini silme
+router.post('/createpackages', verifyToken, createQuestionPackage); // JWT doğrulaması ile soru paketi oluşturma
+router.get('/getpackages', verifyToken, getQuestionPackages); // JWT doğrulaması ile tüm soru paketlerini listeleme
+router.get('/getpackages/:id', verifyToken, getQuestionPackages);
+router.put('/updatepackages/:id', verifyToken, updateQuestionPackage); // JWT doğrulaması ile soru paketini güncelleme
+router.delete('/deletepackages/:id', verifyToken, deleteQuestionPackage); // JWT doğrulaması ile soru paketini silme
 
 export default router;

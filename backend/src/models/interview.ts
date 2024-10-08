@@ -4,7 +4,6 @@ import { Schema, model, Document } from 'mongoose';
 export interface IInterview extends Document {
   title_name: string;
   question: string[]; // Sorular dizisi
-  id: number;
   candidates: string[]; // Adaylar dizisi
   can_skip: boolean;
   showing: boolean;
@@ -15,7 +14,6 @@ export interface IInterview extends Document {
 const interviewSchema = new Schema<IInterview>({
   title_name: { type: String, required: true },
   question: { type: [String], required: true }, // Sorular dizisi
-  id: { type: Number, required: true },
   candidates: { type: [String], required: true }, // Adayların dizisi
   can_skip: { type: Boolean, required: true, default: false }, // Sorunun atlanabilir olup olmadığı
   showing: { type: Boolean, required: true, default: true }, // Sorunun gösterilip gösterilmediği

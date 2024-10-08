@@ -4,10 +4,9 @@ import Question from '../models/question'; // Question modelini içe aktar
 // Soru Oluşturma (Create)
 export const createQuestion = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { id, question, timer } = req.body;
+    const { question, timer } = req.body;
 
     const newQuestion = new Question({
-      id,
       question,
       timer,
     });
@@ -16,6 +15,16 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
     res.status(201).json(newQuestion);
   } catch (error) {
     res.status(500).json({ message: 'Soru oluşturulurken hata oluştu', error });
+  }
+};
+
+export const getQuestionsByID = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  try {
+    const question = await Question.findById(id);
+    res.status(200).json(question);
+  } catch (error) {
+    res.status(500).json({ message: 'Soru getirilirken hata oluştu', error });
   }
 };
 

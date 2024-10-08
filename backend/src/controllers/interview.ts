@@ -22,8 +22,8 @@ export const createInterview = async (req: Request, res: Response): Promise<void
 
 export const getInterviews = async (req: Request, res: Response): Promise<void> => {
   try {
-    const interviews = await Interview.find();
-    res.status(200).json(interviews);
+    const interview = await Interview.find();
+    res.status(200).json(interview);
   } catch (error) {
     res.status(500).json({ message: 'Mülakatlar getirilirken hata oluştu', error });
   }
