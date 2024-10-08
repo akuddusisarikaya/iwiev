@@ -1,19 +1,48 @@
-import * as React from "react";
+import React, { useState, useEffect } from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
 
-const questionData = [
-  { id: 1, question: "What is caching?", time: "2 min" },
-  { id: 2, question: "What is Big-O notation?", time: "2 min" },
-  { id: 3, question: "Can you explain JWT concept?", time: "2 min" },
-  { id: 4, question: "What do you expect from this position?", time: "2 min" },
-];
-
 export default function QuestionList({ isModalOpen, onClose }) {
+  const [questions, setQuestions] = useState([]); // Dinamik veriler için state
+  const [loading, setLoading] = useState(true); // Yüklenme durumunu kontrol ediyoruz
+  const [error, setError] = useState(null); // Hata yönetimi için state
 
   const nav = useNavigate();
 
-  const goEdit = () => {nav("/packagequestions")}
+  // Veri çekme işlemi için useEffect kullanıyoruz
+  useEffect(() => {
+    // Backend API'den question listesini almak için fetch kullanıyoruz
+    fetch("http://localhost:3000/api/questions") // Backend API URL'nizi buraya ekleyin
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.json(); // JSON formatına çeviriyoruz
+      })
+      .then((data) => {
+        setQuestions(data); // Gelen veriyi state'e set ediyoruz
+        setLoading(false); // Yükleme işlemi tamamlandı
+      })
+      .catch((error) => {
+        console.error("Veri çekilirken hata oluştu:", error);
+        setError(error.message);
+        setLoading(false); // Yükleme tamamlandı ama hata ile karşılaşıldı
+      });
+  }, []); // Bileşen yüklendiğinde bir kez çalışır
+
+  const goEdit = () => {
+    nav("/packagequestions");
+  };
+
+  // Eğer veriler yükleniyorsa, bir yükleme mesajı göster
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  // Eğer hata varsa hata mesajı göster
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <>
@@ -36,15 +65,21 @@ export default function QuestionList({ isModalOpen, onClose }) {
                   </tr>
                 </thead>
                 <tbody>
-                  {questionData.map((item) => (
-                    <tr key={item.id}>
+                  {questions.map((item) => (
+                    <tr key={item._id}> {/* Backend'den gelen ObjectId'yi kullan */}
                       <td>{item.question}</td>
-                      <td>{item.time}</td>
+                      <td>{item.timer} min</td> {/* Timer alanını backend'e göre düzenle */}
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <button onClick={goEdit} style={{marginLeft:"75%" , borderRadius:"2cap"}} className="add-button2">Edit</button>
+              <button
+                onClick={goEdit}
+                style={{ marginLeft: "75%", borderRadius: "2cap" }}
+                className="add-button2"
+              >
+                Edit
+              </button>
             </div>
           </div>
         </div>
