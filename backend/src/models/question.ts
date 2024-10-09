@@ -3,13 +3,13 @@ import { Schema, model, Document } from 'mongoose';
 // Question arayüzü
 export interface IQuestion extends Document {
   question: string;
-  timer: number;
+  timer: string;
 }
 
 // Question şeması
 const questionSchema = new Schema<IQuestion>({
   question: { type: String, required: true },
-  timer: { type: Number, required: true }, // Soru için belirlenen süre (saniye cinsinden)
+  timer: { type: String, required: true },
 });
 
 const Question = model<IQuestion>('Question', questionSchema);

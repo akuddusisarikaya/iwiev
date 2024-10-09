@@ -28,6 +28,16 @@ export const getPackages = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
+export const getPackageByID = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  try {
+    const pack = await Package.findById(id);
+    res.status(200).json(pack);
+  } catch (error) {
+    res.status(500).json({ message: 'Soru paketi getirilirken hata oluştu', error });
+  }
+};
+
 // Belirli Bir Soru Paketini Güncelleme (Update)
 export const updatePackage = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;

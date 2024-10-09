@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Question from '../models/question'; // Question modelini içe aktar
+import mongoose from 'mongoose';
 
 // Soru Oluşturma (Create)
 export const createQuestion = async (req: Request, res: Response): Promise<void> => {
@@ -20,8 +21,9 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
 
 export const getQuestionsByID = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
+  const questid = new mongoose.Types.ObjectId(id)
   try {
-    const question = await Question.findById(id);
+    const question = await Question.findById(questid);
     res.status(200).json(question);
   } catch (error) {
     res.status(500).json({ message: 'Soru getirilirken hata oluştu', error });

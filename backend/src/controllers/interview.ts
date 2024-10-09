@@ -1,18 +1,13 @@
 import { Request, Response } from 'express';
 import Interview from '../models/interview'; // Mülakat modelini içe aktar
+import mongoose from 'mongoose';
 
 export const createInterview = async (req: Request, res: Response): Promise<void> => {
   try {
-    // Kimlik doğrulaması yapılmış kullanıcıya erişim (verifyToken middleware'inden gelir)
-    const user = (req as any).user; // Middleware'den gelen kullanıcı bilgileri
-
-    // Mülakat oluşturma işlemi
     const newInterview = new Interview({
-      ...req.body,
-      createdBy: user.id, // Kimlik doğrulanan kullanıcı ID'si mülakatı oluşturan kişi olarak eklenir
+      ...req.body
     });
     await newInterview.save();
-    
     res.status(201).json(newInterview);
   } catch (error) {
     res.status(500).json({ message: 'Mülakat oluşturulurken hata oluştu', error });
@@ -26,6 +21,20 @@ export const getInterviews = async (req: Request, res: Response): Promise<void> 
     res.status(200).json(interview);
   } catch (error) {
     res.status(500).json({ message: 'Mülakatlar getirilirken hata oluştu', error });
+  }
+};
+
+export const getinterviewByID = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const questid = new mongoose.Types.ObjectId(id)
+  try {
+    const inter = await Interview.findById(questid);
+    if(!inter){
+      res.status(404).json("interview did not found")
+    }
+    res.status(200).json(inter);
+  } catch (error) {
+    res.status(500).json({ message: 'Soru paketi getirilirken hata oluştu', error });
   }
 };
 

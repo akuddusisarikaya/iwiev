@@ -6,7 +6,7 @@ const router = express.Router();
 
 router.post('/createquestion', verifyToken, createQuestion); // JWT doğrulaması ile soru oluşturma
 router.get('/getquestion', verifyToken, getQuestions); // JWT doğrulaması ile tüm soruları listeleme
-router.get('/getquestion/:id', verifyToken, getQuestionsByID);
+router.get('/getquestionbyid/:id', verifyToken, getQuestionsByID);
 router.put('/updatequestion/:id', verifyToken, updateQuestion); // JWT doğrulaması ile soru güncelleme
 router.delete('/deletequestion/:id', verifyToken, deleteQuestion); // JWT doğrulaması ile soru silme
 
