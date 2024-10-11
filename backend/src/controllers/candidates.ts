@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Candidates from '../models/candidates'; // Candidates modelini içe aktar
+import mongoose from 'mongoose';
 
 // Aday Oluşturma (Create)
 export const createCandidate = async (req: Request, res: Response): Promise<void> => {
@@ -31,6 +32,20 @@ export const getCandidates = async (req: Request, res: Response): Promise<void> 
     res.status(200).json(candidates);
   } catch (error) {
     res.status(500).json({ message: 'Adaylar getirilirken hata oluştu', error });
+  }
+};
+
+export const getCandidateByID = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  const questid = new mongoose.Types.ObjectId(id)
+  try {
+    const inter = await Candidates.findById(questid);
+    if(!inter){
+      res.status(404).json("candidate did not found")
+    }
+    res.status(200).json(inter);
+  } catch (error) {
+    res.status(500).json({ message: 'Soru paketi getirilirken hata oluştu', error });
   }
 };
 

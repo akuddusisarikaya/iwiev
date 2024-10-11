@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Package from '../models/package';
+import mongoose from 'mongoose';
 
 // Soru Paketi Oluşturma (Create)
 export const createPackage = async (req: Request, res: Response): Promise<void> => {
@@ -30,8 +31,9 @@ export const getPackages = async (req: Request, res: Response): Promise<void> =>
 
 export const getPackageByID = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
+  const questid = new mongoose.Types.ObjectId(id)
   try {
-    const pack = await Package.findById(id);
+    const pack = await Package.findById(questid);
     res.status(200).json(pack);
   } catch (error) {
     res.status(500).json({ message: 'Soru paketi getirilirken hata oluştu', error });
