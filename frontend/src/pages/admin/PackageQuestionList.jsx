@@ -24,19 +24,15 @@ export default function PackageQuestionList() {
 
         if (data?.question?.length > 0) {
           const questionsData = await Promise.all(
-            data.question.map((questId) => {
-              console.log(questId);
+            data.question.map(async (questId) => {
               const questLink = `getquestionbyid/${questId}`;
-              const fetchQuestions = async () => {
-                const data = await fetchData(questLink, order);
-                console.log(data);
-                return data;
-              };
-              fetchQuestions();
+              const questData = await fetchData(questLink, order);
+              console.log(questData);
+              return questData;
             })
           );
-
-          setQuestion(questionsData);
+          setQuestion(questionsData); // Tüm sorular geldikten sonra tek seferde state güncellemesi
+          console.log(questionsData);
         }
       } catch (err) {
         console.error("Error fetching package or questions:", err);
@@ -46,36 +42,40 @@ export default function PackageQuestionList() {
     getPackage();
   }, [id, fetchData]);
 
-  const handleAddquestion = (e) => {
-    const addNewQuestion = async (e) => {
-      const link = `updatepackage/${pack._id}`;
-      const order = "PUT";
-      const newBody = { question: [e] };
-      const data = await setData(link, order, newBody);
-    };
-    addNewQuestion();
+  const handleAddquestion = async (e) => {
+    const link = `updatepackage/${pack._id}`;
+    const order = "PUT";
+    const newBody = { question: [...pack.question, e] }; // Mevcut sorulara yenisini ekliyoruz
+    const data = await setData(link, order, newBody);
+    setPackage((prevPack) => ({
+      ...prevPack,
+      question: newBody.question, // package state'ini güncelliyoruz
+    }));
+    nav(0);
   };
 
-  const handleDelete = (e) => {
-    const index = e.target.value;
-    const questList = pack.question.splice(index, 1);
-    const newBody = questList;
+  const handleDelete = async (e) => {
+    const index = parseInt(e.target.value, 10);
+    const updatedQuestions = pack.question.filter((_, i) => i !== index); // İlgili indeksi çıkarıyoruz
+    const newBody = { question: updatedQuestions }; // Güncellenmiş soru listesi
     const link = `updatepackage/${id}`;
     const order = "PUT";
-    setData(link, order, newBody);
+    await setData(link, order, newBody);
+
+    // package ve questions state'lerini güncelliyoruz
+    setPackage((prevPack) => ({
+      ...prevPack,
+      question: updatedQuestions,
+    }));
+
+    setQuestion((prevQuestions) => prevQuestions.filter((_, i) => i !== index));
   };
 
-  const handleOpen = () => {
-    setIsOpen(true);
-  };
-  const handleClose = () => {
-    setIsOpen(false);
-  };
+  const handleOpen = () => setIsOpen(true);
+  const handleClose = () => setIsOpen(false);
 
   const nav = useNavigate();
-  const goBack = () => {
-    nav(-1);
-  };
+  const goBack = () => nav(-1);
 
   return (
     <div>

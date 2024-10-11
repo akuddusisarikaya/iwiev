@@ -13,29 +13,43 @@ export default function InterviewQuestions() {
   const [pack, setPack] = React.useState(null);
   const [interview, setInterview] = React.useState({});
   const [questions, setQuestions] = React.useState([]);
-
+  const [isLoading, setIsLoading] = React.useState(false); // Yükleme durumu için ekledik
 
   const handleRec = async (quest) => {
-    const link = `/updateinterview/${id}`;
-    const order = "POST";
-    const newBody = {
-      question: [quest],
-    };
-    await setData(link, order, newBody);
+    try {
+      const link = `/updateinterview/${id}`;
+      const order = "POST";
+      const newBody = {
+        question: [quest],
+      };
+      await setData(link, order, newBody);
+      setQuestions((prevQuestions) => [...prevQuestions, quest]); // Yeni soru ekleyip state günceller
+    } catch (err) {
+      console.error("Error adding question:", err);
+    }
   };
 
-  const handleDelete = (e) => {
-    const delid = e.target.value;
-    const link = `deletequestion/${delid}`
-    const order = "DELETE"
-    console.log(link, order)
-  }
+  const handleDelete = async (e) => {
+    const delId = e.target.value;
+    const link = `deletequestion/${delId}`;
+    const order = "DELETE";
+    try {
+      await setData(link, order);
+      setQuestions((prevQuestions) =>
+        prevQuestions.filter((q) => q._id !== delId)
+      ); // Silinen soruyu state'den kaldır
+    } catch (err) {
+      console.error("Error deleting question:", err);
+    }
+  };
 
   React.useEffect(() => {
     if (!id) return;
 
     const getInterview = async () => {
       try {
+        setIsLoading(true); // Yükleme başladığında
+        console.log(id);
         const link = `getinterviewbyid/${id}`;
         const order = "GET";
         const data = await fetchData(link, order);
@@ -46,22 +60,27 @@ export default function InterviewQuestions() {
         }
       } catch (err) {
         console.error("Error fetching interview data:", err);
+      } finally {
+        setIsLoading(false); // Veri alındığında veya hata oluştuğunda
       }
     };
 
-    const fetchPack = async (packageId) => {
-      try {
-        const packlink = `getpackagebyid/${packageId}`;
-        const packData = await fetchData(packlink, "GET");
-        setPack(packData);
+    if (interview !== undefined && interview) {
+      console.log(interview)
+      const fetchPack = async () => {
+        try {
+          const packlink = `getpackagebyid/${interview.package}`;
+          const packData = await fetchData(packlink, "GET");
+          setPack(packData);
 
-        if (packData?.question?.length > 0) {
-          fetchAllQuestions(packData.question);
+          if (packData?.question?.length > 0) {
+            fetchAllQuestions(packData.question);
+          }
+        } catch (err) {
+          console.error("Error fetching package data:", err);
         }
-      } catch (err) {
-        console.error("Error fetching package data:", err);
-      }
-    };
+      };
+    }
 
     const fetchAllQuestions = async (questionIds) => {
       try {
@@ -78,7 +97,7 @@ export default function InterviewQuestions() {
     };
 
     getInterview();
-  }, [id]);
+  }, [id, fetchData]);
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
@@ -91,12 +110,12 @@ export default function InterviewQuestions() {
       <AdminDrawer />
       <div className="adminDrawerOpen">
         {error && <h3>{error}</h3>}
-        {loading && <h3>Loading</h3>}
+        {(loading || isLoading) && <h3>Loading...</h3>} {/* Yükleme durumu */}
         <button className="back-button" onClick={goBack}>
           Back
         </button>
         <div className="question-table-container">
-          <h3>{interview.title_name || "INTERVİEW TİTLE"}</h3>
+          <h3>{interview.title_name || "INTERVIEW TITLE"}</h3>
           <button
             onClick={questionOpen ? handleClose : handleOpen}
             className="add-button2"
@@ -126,7 +145,13 @@ export default function InterviewQuestions() {
                     <td>{q.question}</td>
                     <td>{q.timer}</td>
                     <td>
-                      <button value={q._id} onClick={handleDelete} className="delete-button">Delete</button>
+                      <button
+                        value={q._id}
+                        onClick={handleDelete}
+                        className="delete-button"
+                      >
+                        Delete
+                      </button>
                     </td>
                   </tr>
                 ))
