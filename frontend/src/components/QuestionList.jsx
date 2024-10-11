@@ -1,38 +1,43 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import "../App.css";
 import { useNavigate } from "react-router-dom";
 
 export default function QuestionList({ isModalOpen, onClose }) {
-  const [questions, setQuestions] = useState([]); // Dinamik veriler için state
-  const [loading, setLoading] = useState(true); // Yüklenme durumunu kontrol ediyoruz
-  const [error, setError] = useState(null); // Hata yönetimi için state
+  const [questions, setQuestions] = React.useState([]); // Dinamik veriler için state
+  const [loading, setLoading] = React.useState(true); // Yüklenme durumunu kontrol ediyoruz
+  const [error, setError] = React.useState(null); // Hata yönetimi için state
 
   const nav = useNavigate();
 
-  // Veri çekme işlemi için useEffect kullanıyoruz
-  useEffect(() => {
-    // Backend API'den question listesini almak için fetch kullanıyoruz
-    fetch("http://localhost:3000/api/questions") // Backend API URL'nizi buraya ekleyin
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json(); // JSON formatına çeviriyoruz
-      })
-      .then((data) => {
-        setQuestions(data); // Gelen veriyi state'e set ediyoruz
-        setLoading(false); // Yükleme işlemi tamamlandı
-      })
-      .catch((error) => {
-        console.error("Veri çekilirken hata oluştu:", error);
-        setError(error.message);
-        setLoading(false); // Yükleme tamamlandı ama hata ile karşılaşıldı
-      });
-  }, []); // Bileşen yüklendiğinde bir kez çalışır
-
-  const goEdit = () => {
-    nav("/packagequestions");
+  const goEdit = (e) => {
+    const newid=e.target.value
+    nav(`/packagequestions/${newid}`);
   };
+
+  React.useEffect(() => {
+    const fetchQuestion = async () => {
+      setError(null);
+      setLoading(true);
+      const token = sessionStorage.getItem("token");
+      try {
+        const response = await fetch("http://localhost:3000/api/getquestion", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) throw new Error("Questions did not catch");
+        const data = await response.json();
+        setQuestions(data);
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchQuestion();
+  }, []);
 
   // Eğer veriler yükleniyorsa, bir yükleme mesajı göster
   if (loading) {
@@ -66,20 +71,24 @@ export default function QuestionList({ isModalOpen, onClose }) {
                 </thead>
                 <tbody>
                   {questions.map((item) => (
-                    <tr key={item._id}> {/* Backend'den gelen ObjectId'yi kullan */}
+                    <tr key={item._id}>
+                      {" "}
+                      {/* Backend'den gelen ObjectId'yi kullan */}
                       <td>{item.question}</td>
-                      <td>{item.timer} min</td> {/* Timer alanını backend'e göre düzenle */}
+                      <td>{item.timer} min</td>{" "}
+                      {/* Timer alanını backend'e göre düzenle */}
+                      <button
+                        value={item._id}
+                        onClick={goEdit}
+                        style={{ marginLeft: "75%", borderRadius: "2cap" }}
+                        className="add-button2"
+                      >
+                        Edit
+                      </button>
                     </tr>
                   ))}
                 </tbody>
               </table>
-              <button
-                onClick={goEdit}
-                style={{ marginLeft: "75%", borderRadius: "2cap" }}
-                className="add-button2"
-              >
-                Edit
-              </button>
             </div>
           </div>
         </div>

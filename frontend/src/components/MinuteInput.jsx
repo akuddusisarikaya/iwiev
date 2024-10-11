@@ -1,13 +1,14 @@
 import * as React from "react"
 import "../App.css"
 
-const MinuteInput = () => {
-    const [minutes, setMinutes] = React.useState('');
+const MinuteInput = ({onChange, val}) => {
+    const [minutes, setMinutes] = React.useState(val);
   
     const handleMinuteChange = (e) => {
       const value = e.target.value;
       if (value === '' || (parseInt(value) >= 0 && parseInt(value) < 60)) {
         setMinutes(value);
+        onChange(value)
       }
     };
   

@@ -9,6 +9,7 @@ import InterviewVideo from "./pages/admin/InterviewVideo";
 import PackageList from "./pages/admin/PackageList";
 import PackageQuestionList from "./pages/admin/PackageQuestionList";
 import InterviewPage from "./pages/user/InterwiewPage";
+import InterviewQuestions from "./pages/admin/InterviewQuestions";
 
 function App() {
   const token = sessionStorage.getItem("token")
@@ -18,10 +19,11 @@ function App() {
       <Routes>
         <Route path="/" element={<LoginPage />} />
         <Route path="/adminhomepage" element={/*token !== null && */<AdminHomePage />} />
-        <Route path="/videocollection" element={/*token !== null && */<VideoCollection />} />
+        <Route path="/videocollection/:id" element={/*token !== null && */<VideoCollection />} />
         <Route path="/interviewvideo" element={/*token !== null && */<InterviewVideo />} />
         <Route path="/packagelist" element={/*token !== null && */<PackageList />} />
-        <Route path="/packagequestions" element={/*token !== null && */<PackageQuestionList />} />
+        <Route path="/packagequestions/:id" element={/*token !== null && */<PackageQuestionList />} />
+        <Route path="/interviewdetail/:id" element={/*token!== null && */ <InterviewQuestions />} />
         <Route path="/interviewpage" element={<InterviewPage />} />
       </Routes>
     </Router>

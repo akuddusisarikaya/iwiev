@@ -1,11 +1,13 @@
 import * as React from 'react';
 import "../App.css"
 
-const ToggleSwitch = ({ label }) => {
-  const [isToggled, setIsToggled] = React.useState(false);
+const ToggleSwitch = ({ label, onChange, value }) => {
+  const [isToggled, setIsToggled] = React.useState(value);
 
   const handleToggle = () => {
-    setIsToggled(!isToggled);
+    const newValue = !isToggled;
+    setIsToggled(newValue);
+    onChange(newValue);  // Yeni toggle değerini geri döndür
   };
 
   return (

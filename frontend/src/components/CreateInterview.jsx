@@ -1,17 +1,52 @@
 import * as React from "react";
 import "../App.css";
 import ToggleSwitch from "./ToggleSwitch";
-import AddQuestion from "./AddQuestion";
+import useAPI from "../store/storeAPI";
 
 export default function CreatInterview({ isModalOpen, onClose }) {
-  const [areaOpen, setAreaOpen] = React.useState(false);
+  const { loading, error, fetchData, setData } = useAPI();
+  const [title, setTitle] = React.useState("");
+  const [pack, setPack] = React.useState([]);
+  const [selectedPack, setSelectedPack] = React.useState("");
+  const [skip, setSkip] = React.useState(false);
+  const [show, setShow] = React.useState(false);
 
-  const handleAreaClose = () =>{
-    setAreaOpen(false)
-  }
+  const handleTitle = (e) => {
+    setTitle(e.target.value);
+  };
 
-  const handleAreaOpen = () => {
-    setAreaOpen(true);
+  const handlePackages = (e) => {
+    setSelectedPack(e.target.value);
+  };
+
+  const handleSkip = (value) => {
+    setSkip(value);
+  };
+
+  const handleShow = (value) => {
+    setShow(value);
+  };
+
+  React.useState(() => {
+    const fetchPakages = async () => {
+      const link = "/getpackage";
+      const order = "GET";
+      const data = await fetchData(link, order);
+      setPack(data);
+    };
+    fetchPakages();
+  }, []);
+
+  const submitButton = async () => {
+    const link = "/creatinterview";
+    const order = "POST";
+    const bodyInterview = {
+      title_name: title,
+      package: selectedPack,
+      can_skip: skip,
+      showing: show,
+    };
+    setData(link, order, bodyInterview);
   };
   return (
     <>
@@ -21,30 +56,49 @@ export default function CreatInterview({ isModalOpen, onClose }) {
             <span className="close" onClick={onClose}>
               &times;
             </span>
+            {error && <h3>{error}</h3>}
+            {loading && <h3>Loading...</h3>}
             <br />
             <h3>Title:</h3>
-            <input className="create-text-field"></input>
+            <input
+              value={title}
+              onChange={handleTitle}
+              className="create-text-field"
+            ></input>
             <h3>Package:</h3>
-            <select type="select" className="create-text-field">
+            <select
+              type="select"
+              onChange={handlePackages}
+              className="create-text-field"
+            >
               <option></option>
-              <option>Package 1</option>
-              <option>Package 2</option>
-              <option>Package 3</option>
-              <option>Package 4</option>
+              {pack !== null ? (
+                pack.map((pck, index) => (
+                  <option key={index} value={pck._id}>
+                    {pck.name}
+                  </option>
+                ))
+              ) : (
+                <div />
+              )}
             </select>
-            {areaOpen ? (
-              <AddQuestion isOpen={areaOpen} onClose={handleAreaClose} />
-            ) : (
-              <button className="modal-button" onClick={handleAreaOpen} >+ Add question</button>
-            )}
-
             <div className="form-group">
               <br />
-              <ToggleSwitch label="Can Skip" />
+              <ToggleSwitch
+                onChange={handleSkip}
+                value={skip}
+                label="Can Skip"
+              />
               <br />
-              <ToggleSwitch label="Show At Once" />
+              <ToggleSwitch
+                onChange={handleShow}
+                value={show}
+                label="Show At Once"
+              />
             </div>
-            <button className="modal-submit-button" onClick={onClose}>Add</button>
+            <button className="modal-submit-button" onClick={submitButton}>
+              Add
+            </button>
           </div>
         </div>
       )}

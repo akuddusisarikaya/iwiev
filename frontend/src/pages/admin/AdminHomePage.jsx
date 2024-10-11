@@ -5,38 +5,29 @@ import QuestionList from "../../components/QuestionList";
 import { useNavigate } from "react-router-dom";
 import CreatInterview from "../../components/CreateInterview";
 import SeeLink from "../../components/SeeLink";
-
-const cardsData = [
-  {
-    id: 1,
-    title: "Interview 1",
-    total: "6",
-    holdon: "3",
-  },
-  {
-    id: 2,
-    title: "Interview 2",
-    total: "6",
-    holdon: "3",
-  },
-  {
-    id: 3,
-    title: "Interview 3",
-    total: "6",
-    holdon: "3",
-  },
-  {
-    id: 4,
-    title: "Interview 4",
-    total: "6",
-    holdon: "3",
-  },
-];
+import useAPI from "../../store/storeAPI";
 
 export default function AdminHomePage() {
+  const { error, loading, fetchData } = useAPI();
   const [listOpen, setListOpen] = React.useState(false);
   const [createOpen, setCreateOpen] = React.useState(false);
   const [linkOpen, setLinkOpen] = React.useState(false);
+  const [packages, setPackages] = React.useState([]);
+
+  const handleDetail = (e) => {
+    const link = e.target.value;
+    nav(`/interviewdetail/${link}`);
+  };
+  const seeVideos = (e) => {
+    const link = e.target.value;
+    nav(`/videocollection/${link}`);
+  };
+  const handleDelete =  (e) => {
+    const takenid = e.target.value;
+    const link = `/deleteinterview/${takenid}`;
+    const order = "DELETE";
+    fetchData(link, order)
+  };
 
   const handleLinkOpen = () => {
     setLinkOpen(true);
@@ -52,9 +43,9 @@ export default function AdminHomePage() {
   const handleCreateClose = () => {
     setCreateOpen(false);
   };
-  const handleListOpen = () => {
+  /*const handleListOpen = () => {
     setListOpen(true);
-  };
+  };*/
 
   const handleListClose = () => {
     setListOpen(false);
@@ -62,13 +53,19 @@ export default function AdminHomePage() {
 
   const nav = useNavigate();
 
-  const goVideos = () => {
-    nav("/videocollection");
-  };
+  React.useEffect(() => {
+    const fectPackages = async () => {
+      const link = "getinterview";
+      const order = "GET";
+      const data = await fetchData(link, order);
+      setPackages(data);
+    };
+    fectPackages();
+  }, []);
 
-  const Card = ({ title, total, holdon }) => (
+  const Card = ({ title, total, holdon, value }) => (
     <div className="card">
-      <button onClick={handleListOpen} className="card-info-button">
+      <button value={value} onClick={handleDetail} className="card-info-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
@@ -103,7 +100,11 @@ export default function AdminHomePage() {
         </svg>
         See Link
       </button>
-      <button className="card-delete-button">
+      <button
+        value={value}
+        onClick={handleDelete}
+        className="card-delete-button"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
@@ -139,7 +140,7 @@ export default function AdminHomePage() {
         </svg>
         Published
       </button>
-      <button onClick={goVideos} className="card-button">
+      <button value={value} onClick={seeVideos} className="card-button">
         See Videos
       </button>
     </div>
@@ -149,9 +150,11 @@ export default function AdminHomePage() {
     <div>
       <AdminDrawer />
       <div className="adminDrawerOpen">
+        {error&& <h3>{error}</h3>}
+        {loading&& <h3>Loading...</h3>}
         <QuestionList isModalOpen={listOpen} onClose={handleListClose} />
         <CreatInterview isModalOpen={createOpen} onClose={handleCreateClose} />
-        <SeeLink isModalOpen={linkOpen} onClose={handleLinkClose}/>
+        <SeeLink isModalOpen={linkOpen} onClose={handleLinkClose} />
         <button onClick={handleCreateOpen} className="add-button">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -169,14 +172,19 @@ export default function AdminHomePage() {
           </svg>
         </button>
         <div className="grid-container">
-          {cardsData.map((card) => (
-            <Card
-              key={card.id}
-              title={card.title}
-              total={card.total}
-              holdon={card.holdon}
-            />
-          ))}
+          {packages !== null ? (
+            packages.map((pack) => (
+              <Card
+                value={pack._id}
+                key={pack.id}
+                title={pack.title_name}
+                total={pack.candidates.length || "0"}
+                holdon={pack.videos.length || "0"}
+              />
+            ))
+          ) : (
+            <div />
+          )}
         </div>
       </div>
     </div>

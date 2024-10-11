@@ -3,64 +3,30 @@ import "../../App.css";
 import AdminDrawer from "../../components/AdminDrawer";
 import { useNavigate } from "react-router-dom";
 import AddPackage from "../../components/AddPackage";
-
+import useAPI from "../../store/storeAPI"
 export default function PackageList() {
-  const [packages, setPackages] = useState([]); // Paket verileri için state
+  const {error, loading, fetchData} = useAPI();
+  const [pack, setPack] = React.useState([]);
   const [isModalOpen, setModalOpen] = useState(false);
-  const [loading, setLoading] = useState(true); // Yüklenme durumunu kontrol ediyoruz
-  const [error, setError] = useState(null); // Hata yönetimi için state
 
   const nav = useNavigate();
 
-  // Backend'den paket verilerini almak için useEffect kullanıyoruz
-  useEffect(() => {
-    const token = sessionStorage.getItem("token");
-    // Fetch API ile backend'den veriyi çekiyoruz
-    fetch("http://localhost:3000/api/getpackage",{
-      method:"GET",
-      headers:{
-        "Content-Type":"application/json",
-        Authorization : `Bearer ${token}`	
-      }
-    }) // Backend API URL'nizi buraya ekleyin
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        setPackages(data); // Veriyi state'e set ediyoruz
-        setLoading(false); // Yükleme tamamlandı
-      })
-      .catch((error) => {
-        setError(error.message);
-        setLoading(false); // Hata durumunda da yüklenmeyi bitiriyoruz
-      });
-  }, []); // Bu efekt yalnızca bileşen yüklendiğinde bir kez çalışır
+  useEffect( () => {
+    const link = "getpackage"
+    const order = "GET"
+    const getPack = async() => {
+      const data = await fetchData(link, order)
+    setPack(data)
+    }
+    getPack();
+  }, []); 
 
   const handleDelete = (e) => {
     e.preventDefault();
     const id = e.target.value;
-    const token = sessionStorage.getItem("token");
-    // Silme işlemi için backend API çağrısı
-    fetch(`http://localhost:3000/api/deletepackage/${id}`, {
-      method: "DELETE",
-        headers:{
-          "Content-Type":"application/json",
-          Authorization : `Bearer ${token}`
-        }
-    })
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        // Silme işlemi başarılı olduğunda, paket listesini güncelle
-        setPackages(packages.filter((pkg) => pkg._id !== id));
-      })
-      .catch((error) => {
-        console.error("Error deleting package:", error);
-      });
+    const link = `deletepackage/${id}`
+    const order = "DELETE"
+    fetchData(link,order)
   };
 
   const handleModalOpen = () => {
@@ -71,16 +37,15 @@ export default function PackageList() {
     setModalOpen(false);
   };
 
-  const goEdit = () => {
-    nav("/packagequestions");
+  const goEdit = (e) => {
+    const pac = e.target.value 
+    nav(`/packagequestions/${pac}`);
   };
 
-  // Eğer veriler yükleniyorsa, bir yükleme mesajı göster
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  // Eğer hata varsa hata mesajı göster
   if (error) {
     return <div>Error: {error}</div>;
   }
@@ -111,9 +76,9 @@ export default function PackageList() {
               </tr>
             </thead>
             <tbody>
-              {packages.map((pkg, index) => (
-                <tr key={pkg._id}> {/* MongoDB'den gelen ObjectId kullanıyoruz */}
-                  <td>{index + 1}</td>
+              {pack.map((pkg, index) => (
+                <tr key={pkg._id}>
+                  <td>{index+1}</td>
                   <td>{pkg.name}</td>
                   <td>{pkg.questionCount}</td>
                   <td>

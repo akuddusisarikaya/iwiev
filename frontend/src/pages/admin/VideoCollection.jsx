@@ -2,33 +2,45 @@ import * as React from "react";
 import "../../App.css";
 import AdminDrawer from "../../components/AdminDrawer";
 import { useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
-const videoCardsData = [
-  {
-    id: 1,
-    name: "Alice Armstrong",
-  },
-  {
-    id: 2,
-    name: "Garry Page",
-  },
-  {
-    id: 3,
-    name: "Jim Carry",
-  },
-  {
-    id: 4,
-    name: "Jack Nicholson",
-  },
-];
 export default function VideoCollection() {
+  const [error, setError] = React.useState(null);
+  const [interview, setInterview] = React.useState({});
+  const { id } = useParams();
   const nav = useNavigate();
   const goVideo = () => {
     nav("/interviewvideo");
   };
   const goBack = () => {
-    nav(-1)
-  }
+    nav(-1);
+  };
+
+  React.useEffect(() => {
+    const getInter = async () => {
+      try {
+        const token = sessionStorage.getItem("token");
+        const response = await fetch(
+          `http://localhost:3000/api/getinterviewbyid/${id}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        if(!response.ok) throw new Error("interview did not catch");
+        const data = await response.json();
+        console.log(data)
+        setInterview(data)
+      } catch (error) {
+        setError(error.message);
+      }
+    };
+    getInter();
+  }, []);
+
   const Card = ({ name }) => (
     <div className="card">
       <h5>{name}</h5>
@@ -56,11 +68,15 @@ export default function VideoCollection() {
     <div>
       <AdminDrawer />
       <div className="adminDrawerOpen">
-        <button className="back-button" onClick={goBack}>Back</button>
+        <button className="back-button" onClick={goBack}>
+          Back
+        </button>
         <div className="grid-container">
-          {videoCardsData.map((card) => (
-            <Card key={card.id} name={card.name} />
-          ))}
+          {interview.videos !== null ? (
+            interview.videos.map((video, index)=> (
+              <Card key={index} name={video}/>
+            ))
+          ): (<div/>)}
         </div>
       </div>
     </div>
