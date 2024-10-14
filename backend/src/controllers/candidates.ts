@@ -1,34 +1,19 @@
+// controllers/candidateController.ts
 import { Request, Response } from 'express';
-import Candidates from '../models/candidates'; // Candidates modelini içe aktar
-import mongoose from 'mongoose';
+import * as candidateService from '../services/candidates';
 
-// Aday Oluşturma (Create)
 export const createCandidate = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { name, surname, email, phone_number, note, status, video_url, activate } = req.body;
-
-    const newCandidate = new Candidates({
-      name,
-      surname,
-      email,
-      phone_number,
-      note,
-      status,
-      video_url,
-      activate,
-    });
-
-    await newCandidate.save();
-    res.status(201).json(newCandidate);
+    const candidate = await candidateService.createCandidate(req.body);
+    res.status(201).json(candidate);
   } catch (error) {
     res.status(500).json({ message: 'Aday oluşturulurken hata oluştu', error });
   }
 };
 
-// Tüm Adayları Listeleme (Read)
 export const getCandidates = async (req: Request, res: Response): Promise<void> => {
   try {
-    const candidates = await Candidates.find();
+    const candidates = await candidateService.getAllCandidates();
     res.status(200).json(candidates);
   } catch (error) {
     res.status(500).json({ message: 'Adaylar getirilirken hata oluştu', error });
@@ -36,35 +21,30 @@ export const getCandidates = async (req: Request, res: Response): Promise<void> 
 };
 
 export const getCandidateByID = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
-  const questid = new mongoose.Types.ObjectId(id)
   try {
-    const inter = await Candidates.findById(questid);
-    if(!inter){
-      res.status(404).json("candidate did not found")
+    const candidate = await candidateService.getCandidateByID(req.params.id);
+    if (!candidate) {
+      res.status(404).json({ message: 'Aday bulunamadı' });
+    } else {
+      res.status(200).json(candidate);
     }
-    res.status(200).json(inter);
   } catch (error) {
-    res.status(500).json({ message: 'Soru paketi getirilirken hata oluştu', error });
+    res.status(500).json({ message: 'Aday getirilirken hata oluştu', error });
   }
 };
 
-// Belirli Bir Adayı Güncelleme (Update)
 export const updateCandidate = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
   try {
-    const updatedCandidate = await Candidates.findByIdAndUpdate(id, req.body, { new: true });
+    const updatedCandidate = await candidateService.updateCandidate(req.params.id, req.body);
     res.status(200).json(updatedCandidate);
   } catch (error) {
     res.status(500).json({ message: 'Aday güncellenirken hata oluştu', error });
   }
 };
 
-// Aday Silme (Delete)
 export const deleteCandidate = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
   try {
-    await Candidates.findByIdAndDelete(id);
+    await candidateService.deleteCandidate(req.params.id);
     res.status(200).json({ message: 'Aday başarıyla silindi' });
   } catch (error) {
     res.status(500).json({ message: 'Aday silinirken hata oluştu', error });

@@ -8,6 +8,8 @@ import question from './routes/question';
 import qpackage from './routes/package';
 import interview from './routes/interview';
 import candidates from './routes/candidates';
+import videoRoutes from './routes/video';  // Video yükleme rotasını ekledik
+
 dotenv.config();
 
 const app = express();
@@ -24,8 +26,8 @@ app.use("/api", qpackage)
 app.use("/api", interview)
 app.use("/api", candidates)
 
-
-
+// Cloudinary video yükleme rotası
+app.use("/api/videos", videoRoutes);  // Video yükleme için eklenen yeni route
 
 app.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`);

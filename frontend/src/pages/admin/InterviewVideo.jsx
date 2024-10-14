@@ -2,8 +2,19 @@ import * as React from "react";
 import "../../App.css";
 import AdminDrawer from "../../components/AdminDrawer";
 import ToggleSwitch from "../../components/ToggleSwitch";
-
+import { useParams } from "react-router-dom";
+import useAPI from "../../store/storeAPI";
 export default function InterviewVideo() {
+
+  const {id, val} = useParams();
+  const interID = id;
+  const candidateID = val;
+  const {error, loading, fetchData, setData} = useAPI();
+
+  const fetchInterview = async () => {
+
+  }
+
   return (
     <div>
         <AdminDrawer/>

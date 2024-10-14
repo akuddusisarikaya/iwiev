@@ -2,8 +2,10 @@ import * as React from "react";
 import "../App.css";
 import ToggleSwitch from "./ToggleSwitch";
 import useAPI from "../store/storeAPI";
+import { useNavigate } from "react-router-dom";
 
 export default function CreatInterview({ isModalOpen, onClose }) {
+  const nav = useNavigate();
   const { loading, error, fetchData, setData } = useAPI();
   const [title, setTitle] = React.useState("");
   const [pack, setPack] = React.useState([]);
@@ -47,6 +49,8 @@ export default function CreatInterview({ isModalOpen, onClose }) {
       showing: show,
     };
     setData(link, order, bodyInterview);
+    nav(0);
+    onClose();
   };
   return (
     <>

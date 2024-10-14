@@ -61,3 +61,13 @@ export const deletePackage = async (req: Request, res: Response): Promise<void> 
     res.status(500).json({ message: 'Soru paketi silinirken hata oluştu', error });
   }
 };
+
+export const patchPackage = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  try {
+    const patchedPackage = await Package.findByIdAndUpdate(id, { $set: req.body }, { new: true });
+    res.status(200).json(patchedPackage);
+  } catch (error) {
+    res.status(500).json({ message: 'Soru paketi güncellenirken hata oluştu', error });
+  }
+};

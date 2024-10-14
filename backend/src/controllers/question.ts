@@ -1,18 +1,12 @@
+// controllers/questionController.ts
 import { Request, Response } from 'express';
-import Question from '../models/question'; // Question modelini içe aktar
-import mongoose from 'mongoose';
+import * as questionService from '../services/question';
+import mongoose, { mongo } from 'mongoose';
+import Question from '../models/question';
 
-// Soru Oluşturma (Create)
 export const createQuestion = async (req: Request, res: Response): Promise<void> => {
   try {
-    const { question, timer } = req.body;
-
-    const newQuestion = new Question({
-      question,
-      timer,
-    });
-
-    await newQuestion.save();
+    const newQuestion = await questionService.createQuestion(req.body);
     res.status(201).json(newQuestion);
   } catch (error) {
     res.status(500).json({ message: 'Soru oluşturulurken hata oluştu', error });
@@ -21,41 +15,40 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
 
 export const getQuestionsByID = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  const questid = new mongoose.Types.ObjectId(id)
+  const id_val= new mongoose.Types.ObjectId(id);
+
   try {
-    const question = await Question.findById(questid);
-    res.status(200).json(question);
+    const question = await Question.findById(id_val);
   } catch (error) {
     res.status(500).json({ message: 'Soru getirilirken hata oluştu', error });
   }
 };
 
-// Tüm Soruları Listeleme (Read)
 export const getQuestions = async (req: Request, res: Response): Promise<void> => {
   try {
-    const question = await Question.find();
-    res.status(200).json(question);
+    const questions = await questionService.getAllQuestions();
+    if  (!questions || questions.length === 0) {
+      res.status(404).json({ message: 'Soru bulunamadı' });
+      return;
+    } 
+    res.status(200).json(questions);
   } catch (error) {
     res.status(500).json({ message: 'Sorular getirilirken hata oluştu', error });
   }
 };
 
-// Belirli Bir Soruyu Güncelleme (Update)
 export const updateQuestion = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
   try {
-    const updatedQuestion = await Question.findByIdAndUpdate(id, req.body, { new: true });
+    const updatedQuestion = await questionService.updateQuestion(req.params.id, req.body);
     res.status(200).json(updatedQuestion);
   } catch (error) {
     res.status(500).json({ message: 'Soru güncellenirken hata oluştu', error });
   }
 };
 
-// Soru Silme (Delete)
 export const deleteQuestion = async (req: Request, res: Response): Promise<void> => {
-  const { id } = req.params;
   try {
-    await Question.findByIdAndDelete(id);
+    await questionService.deleteQuestion(req.params.id);
     res.status(200).json({ message: 'Soru başarıyla silindi' });
   } catch (error) {
     res.status(500).json({ message: 'Soru silinirken hata oluştu', error });

@@ -14,12 +14,14 @@ export default function PackageQuestionList() {
   const [question, setQuestion] = React.useState([]);
 
   React.useEffect(() => {
+    if (id === undefined) {
+      nav(0);
+    }
     const getPackage = async () => {
       try {
         const link = `getpackagebyid/${id}`;
         const order = "GET";
         const data = await fetchData(link, order);
-        console.log(data);
         setPackage(data);
 
         if (data?.question?.length > 0) {
@@ -27,12 +29,10 @@ export default function PackageQuestionList() {
             data.question.map(async (questId) => {
               const questLink = `getquestionbyid/${questId}`;
               const questData = await fetchData(questLink, order);
-              console.log(questData);
               return questData;
             })
           );
           setQuestion(questionsData); // Tüm sorular geldikten sonra tek seferde state güncellemesi
-          console.log(questionsData);
         }
       } catch (err) {
         console.error("Error fetching package or questions:", err);
@@ -55,21 +55,24 @@ export default function PackageQuestionList() {
   };
 
   const handleDelete = async (e) => {
-    const index = parseInt(e.target.value, 10);
-    const updatedQuestions = pack.question.filter((_, i) => i !== index); // İlgili indeksi çıkarıyoruz
-    const newBody = { question: updatedQuestions }; // Güncellenmiş soru listesi
-    const link = `updatepackage/${id}`;
-    const order = "PUT";
+    const val = e.target.value;
+    const index = parseInt(e.target.id, 10);
+    const questions = [...pack.question]; // Orijinal diziyi bozmamak için kopyalıyoruz
+    console.log(index)
+    console.log(questions)
+    questions.splice(index, 1);
+    console.log(questions);
+
+    const newBody = { question: questions };
+    const link = `patchpackage/${id}`;
+    const order = "PATCH";
     await setData(link, order, newBody);
-
-    // package ve questions state'lerini güncelliyoruz
-    setPackage((prevPack) => ({
-      ...prevPack,
-      question: updatedQuestions,
-    }));
-
-    setQuestion((prevQuestions) => prevQuestions.filter((_, i) => i !== index));
-  };
+    const dellink = `deletequestion/${val}`;
+    await fetchData(dellink, "DELETE");
+    const data = await fetchData(`getpackagebyid/${id}`, "GET");
+    setPackage(data);
+    setQuestion(data.question);
+};
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
@@ -111,22 +114,26 @@ export default function PackageQuestionList() {
               </tr>
             </thead>
             <tbody>
-              {question.map((q, index) => (
-                <tr key={index}>
-                  <td className="drag-handle">≡</td>
-                  <td>{q.question}</td>
-                  <td>{q.timer}</td>
-                  <td>
-                    <button
-                      value={index}
-                      onClick={handleDelete}
-                      className="delete-button"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))}
+              {question.map(
+                (q, index) =>
+                  q != null && (
+                    <tr key={index}>
+                      <td className="drag-handle">{index+1}</td>
+                      <td>{q.question}</td>
+                      <td>{q.timer}</td>
+                      <td>
+                        <button
+                          id={index}
+                          value={q._id}
+                          onClick={handleDelete}
+                          className="delete-button"
+                        >
+                          Delete
+                        </button>
+                      </td>
+                    </tr>
+                  )
+              )}
             </tbody>
           </table>
           <div className="form-buttons">

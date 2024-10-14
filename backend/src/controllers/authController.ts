@@ -1,26 +1,19 @@
+// controllers/authController.ts
 import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
+import * as authService from "../services/auth";
 
 export const login = async (req: Request, res: Response): Promise<void> => {
   const { email, password } = req.body;
 
   try {
-    const envEmail = process.env.USER_EMAIL;
-    const envPassword = process.env.USER_PASSWORD;
-    const jwtSecret = process.env.JWT_SECRET;
+    const isAuthenticated = authService.authenticateUser(email, password);
 
-    if (email !== envEmail) {
+    if (!isAuthenticated) {
       res.status(400).json({ msg: "Invalid credentials" });
       return;
     }
 
-    if (password !== envPassword) {
-      res.status(400).json({ msg: "Invalid credentials" });
-      return;
-    }
-
-    const token = jwt.sign({ email }, jwtSecret as string, { expiresIn: "1h" });
-
+    const token = authService.generateToken(email);
     res.json({ token });
     return;
   } catch (error) {

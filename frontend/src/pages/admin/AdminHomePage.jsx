@@ -3,35 +3,45 @@ import "../../App.css";
 import AdminDrawer from "../../components/AdminDrawer";
 import QuestionList from "../../components/QuestionList";
 import { useNavigate } from "react-router-dom";
-import CreatInterview from "../../components/CreateInterview";
+import CreateInterview from "../../components/CreateInterview"; // Typo düzeltildi
 import SeeLink from "../../components/SeeLink";
 import useAPI from "../../store/storeAPI";
 
 export default function AdminHomePage() {
   const { error, loading, fetchData } = useAPI();
+  const [sentlink, setLink] = React.useState("");
   const [listOpen, setListOpen] = React.useState(false);
   const [createOpen, setCreateOpen] = React.useState(false);
   const [linkOpen, setLinkOpen] = React.useState(false);
   const [packages, setPackages] = React.useState([]);
 
+  const nav = useNavigate(); // useNavigate tanımlamasını yukarı aldık.
+
   const handleDetail = (e) => {
     const link = e.target.value;
     nav(`/interviewdetail/${link}`);
   };
+
   const seeVideos = (e) => {
     const link = e.target.value;
     nav(`/videocollection/${link}`);
   };
-  const handleDelete =  (e) => {
+
+  const handleDelete = async (e) => {
     const takenid = e.target.value;
-    const link = `/deleteinterview/${takenid}`;
+    const link = `deleteinterview/${takenid}`;
     const order = "DELETE";
-    fetchData(link, order)
+    await fetchData(link, order); // Silme işlemi asenkron hale getirildi.
+    setPackages(packages.filter((pack) => pack._id !== takenid)); // Silinen paketi state'den çıkar.
   };
 
-  const handleLinkOpen = () => {
+  const handleLinkOpen = (e) => {
+    const link = e.target.value;
+    const sendLink = `http://localhost:5173/interviewpage/${link}`;
+    setLink(sendLink);
     setLinkOpen(true);
   };
+
   const handleLinkClose = () => {
     setLinkOpen(false);
   };
@@ -43,25 +53,20 @@ export default function AdminHomePage() {
   const handleCreateClose = () => {
     setCreateOpen(false);
   };
-  /*const handleListOpen = () => {
-    setListOpen(true);
-  };*/
 
   const handleListClose = () => {
     setListOpen(false);
   };
 
-  const nav = useNavigate();
-
   React.useEffect(() => {
-    const fectPackages = async () => {
+    const fetchPackages = async () => {
       const link = "getinterview";
       const order = "GET";
       const data = await fetchData(link, order);
       setPackages(data);
     };
-    fectPackages();
-  }, []);
+    fetchPackages();
+  }, [fetchData]); // fetchData bağımlılığı eklendi.
 
   const Card = ({ title, total, holdon, value }) => (
     <div className="card">
@@ -80,7 +85,11 @@ export default function AdminHomePage() {
         </svg>
         Detail
       </button>
-      <button onClick={handleLinkOpen} className="card-link-button">
+      <button
+        value={value}
+        onClick={handleLinkOpen}
+        className="card-link-button"
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 16 16"
@@ -150,11 +159,15 @@ export default function AdminHomePage() {
     <div>
       <AdminDrawer />
       <div className="adminDrawerOpen">
-        {error&& <h3>{error}</h3>}
-        {loading&& <h3>Loading...</h3>}
+        {error && <h3>{error}</h3>}
+        {loading && <h3>Loading...</h3>}
         <QuestionList isModalOpen={listOpen} onClose={handleListClose} />
-        <CreatInterview isModalOpen={createOpen} onClose={handleCreateClose} />
-        <SeeLink isModalOpen={linkOpen} onClose={handleLinkClose} />
+        <CreateInterview isModalOpen={createOpen} onClose={handleCreateClose} />
+        <SeeLink
+          isModalOpen={linkOpen}
+          onClose={handleLinkClose}
+          viewLink={sentlink}
+        />
         <button onClick={handleCreateOpen} className="add-button">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -176,7 +189,7 @@ export default function AdminHomePage() {
             packages.map((pack) => (
               <Card
                 value={pack._id}
-                key={pack.id}
+                key={pack._id} // Düzeltildi
                 title={pack.title_name}
                 total={pack.candidates.length || "0"}
                 holdon={pack.videos.length || "0"}

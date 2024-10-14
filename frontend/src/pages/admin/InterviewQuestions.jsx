@@ -5,98 +5,125 @@ import { useNavigate } from "react-router-dom";
 import AddQuestion from "../../components/AddQuestion";
 import { useParams } from "react-router-dom";
 import useAPI from "../../store/storeAPI";
+import ToggleSwitch from "../../components/ToggleSwitch";
 
 export default function InterviewQuestions() {
   const { id } = useParams();
+  React.useEffect(() => {
+    if (id === undefined || id === "undefined") {
+      nav("/adminhomepage");
+    }
+  });
   const { error, loading, fetchData, setData } = useAPI();
+  const [pack, setPack] = React.useState({});
   const [questionOpen, setIsOpen] = React.useState(false);
-  const [pack, setPack] = React.useState(null);
   const [interview, setInterview] = React.useState({});
   const [questions, setQuestions] = React.useState([]);
-  const [isLoading, setIsLoading] = React.useState(false); // Yükleme durumu için ekledik
+  const [interviewQuestions, setInterviewQuestions] = React.useState([]);
+  const [packageQuestions, setPackageQuestions] = React.useState([]);
+  const [activate, setActivate] = React.useState(true);
 
-  const handleRec = async (quest) => {
+  const handleActivate = async (value) => {
     try {
-      const link = `/updateinterview/${id}`;
-      const order = "POST";
-      const newBody = {
-        question: [quest],
-      };
-      await setData(link, order, newBody);
-      setQuestions((prevQuestions) => [...prevQuestions, quest]); // Yeni soru ekleyip state günceller
-    } catch (err) {
-      console.error("Error adding question:", err);
+      // Önce state'i güncelleyip sonra API isteği gönderiyoruz
+      setActivate(value);
+
+      // PATCH isteği ile API'yi güncelle
+      const newBody = { activate: value };
+      await setData(`patchinterview/${id}`, "PATCH", newBody);
+    } catch (error) {
+      console.error("Aktivasyon durumu değiştirilemedi:", error);
+      // Hata yönetimi ekleyin, örneğin kullanıcıya uyarı gösterebilirsiniz
     }
   };
 
+  // Yeni soru ekleme işlevi
+  const handleRec = async (quest) => {
+    //"quest" değeri kayıttan sonra oluşturulan yeni question ın id değeri!!
+    var newArr = [...interviewQuestions, quest];
+    setInterviewQuestions(newArr);
+    const newBody = { question: newArr };
+    await setData(`patchinterview/${id}`, "PATCH", newBody);
+    nav(0);
+  };
+
+  // Soru silme işlevi
   const handleDelete = async (e) => {
-    const delId = e.target.value;
-    const link = `deletequestion/${delId}`;
-    const order = "DELETE";
+    const delID = e.target.value;
+    if (packageQuestions.includes(delID)) {
+      const newPackQuestion = packageQuestions;
+      packageQuestions.splice(packageQuestions.indexOf(delID), 1);
+      const newBody = { question: newPackQuestion };
+      await setData(`updatepackage/${pack._id}`, "PUT", newBody);
+    } else {
+      const newIntQuestions = interviewQuestions;
+      interviewQuestions.splice(interviewQuestions.indexOf(delID), 1);
+      const newBody = { question: newIntQuestions };
+      await setData(`updateinterview/${id}`, "PUT", newBody);
+    }
+    await fetchData(`deletequestion/${delID}`, "DELETE");
+
+    loadPage();
+  };
+
+  const loadPage = async () => {
+    if (id === undefined || id === "undefined") {
+      nav("/adminhomepage");
+    }
     try {
-      await setData(link, order);
-      setQuestions((prevQuestions) =>
-        prevQuestions.filter((q) => q._id !== delId)
-      ); // Silinen soruyu state'den kaldır
+      const data = await fetchData(`getinterviewbyid/${id}`, "GET");
+      setInterview(data);
+      if (!data?.package && data.package.length <= 0) {
+        return;
+      }
+      const pac = await fetchData(`getpackagebyid/${data.package}`, "GET");
+      if (data?.question && data.question !== null) {
+        setInterviewQuestions(data.question);
+      }
+      setPack(pac);
+      setPackageQuestions(pac.question);
+      if (
+        (data?.question && data.question.length > 0) ||
+        (pac?.question && pac.question.length > 0)
+      ) {
+        const questData = data.question;
+        const pacquestData = pac.question;
+        const mergedList = [...questData, ...pacquestData];
+        if (mergedList !== null && mergedList.length > 0) {
+          var newList = [];
+          for (let i of mergedList) {
+            const data = await fetchData(`getquestionbyid/${i}`, "GET");
+            if (data !== null) {
+              newList.push(data);
+            }
+          }
+          setQuestions(newList);
+        }
+      }
     } catch (err) {
-      console.error("Error deleting question:", err);
+      console.error("Package error : ", err);
     }
   };
 
   React.useEffect(() => {
-    if (!id) return;
-
-    const getInterview = async () => {
-      try {
-        setIsLoading(true); // Yükleme başladığında
-        console.log(id);
-        const link = `getinterviewbyid/${id}`;
-        const order = "GET";
-        const data = await fetchData(link, order);
-        setInterview(data);
-
-        if (data?.package) {
-          fetchPack(data.package);
-        }
-      } catch (err) {
-        console.error("Error fetching interview data:", err);
-      } finally {
-        setIsLoading(false); // Veri alındığında veya hata oluştuğunda
-      }
-    };
-
-    if (interview !== undefined && interview) {
-      console.log(interview)
-      const fetchPack = async () => {
-        try {
-          const packlink = `getpackagebyid/${interview.package}`;
-          const packData = await fetchData(packlink, "GET");
-          setPack(packData);
-
-          if (packData?.question?.length > 0) {
-            fetchAllQuestions(packData.question);
-          }
-        } catch (err) {
-          console.error("Error fetching package data:", err);
-        }
-      };
+    if (id === undefined || id === "undefined") {
+      nav("/adminhomepage"); // Eğer id geçersizse, geri yönlendir
+      return;
     }
 
-    const fetchAllQuestions = async (questionIds) => {
+    const getActive = async () => {
       try {
-        const questionsData = await Promise.all(
-          questionIds.map(async (questId) => {
-            const questlink = `getquestionbyid/${questId}`;
-            return await fetchData(questlink, "GET");
-          })
-        );
-        setQuestions(questionsData);
-      } catch (err) {
-        console.error("Error fetching questions:", err);
+        // API'den mevcut activate durumunu alıyoruz
+        const data = await fetchData(`getinterviewbyid/${id}`, "GET");
+        setActivate(data.activate); // Durumu güncelliyoruz
+      } catch (error) {
+        console.error("Aktiflik durumu alınamadı:", error);
+        // Hata yönetimi ekleyebilirsiniz
       }
     };
 
-    getInterview();
+    getActive();
+    loadPage(); // Sayfa yükleme fonksiyonu çağrılıyor
   }, [id, fetchData]);
 
   const handleOpen = () => setIsOpen(true);
@@ -110,12 +137,17 @@ export default function InterviewQuestions() {
       <AdminDrawer />
       <div className="adminDrawerOpen">
         {error && <h3>{error}</h3>}
-        {(loading || isLoading) && <h3>Loading...</h3>} {/* Yükleme durumu */}
+        {loading && <h3>Loading...</h3>}
         <button className="back-button" onClick={goBack}>
           Back
         </button>
         <div className="question-table-container">
           <h3>{interview.title_name || "INTERVIEW TITLE"}</h3>
+          <ToggleSwitch
+            label="Activate"
+            onChange={handleActivate}
+            value={activate}
+          ></ToggleSwitch>
           <button
             onClick={questionOpen ? handleClose : handleOpen}
             className="add-button2"
@@ -138,15 +170,17 @@ export default function InterviewQuestions() {
               </tr>
             </thead>
             <tbody>
-              {questions.length > 0 ? (
+              {questions && questions.length > 0 ? (
                 questions.map((q, index) => (
+                  /*q!==null&&*/
                   <tr key={index}>
-                    <td className="drag-handle">≡</td>
-                    <td>{q.question}</td>
-                    <td>{q.timer}</td>
+                    <td className="drag-handle">{index + 1}</td>
+                    <td>{q?.question}</td>
+                    <td>{q?.timer}</td>
                     <td>
                       <button
-                        value={q._id}
+                        id={index}
+                        value={q?._id}
                         onClick={handleDelete}
                         className="delete-button"
                       >

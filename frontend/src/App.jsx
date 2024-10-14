@@ -20,11 +20,11 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/adminhomepage" element={/*token !== null && */<AdminHomePage />} />
         <Route path="/videocollection/:id" element={/*token !== null && */<VideoCollection />} />
-        <Route path="/interviewvideo" element={/*token !== null && */<InterviewVideo />} />
+        <Route path="/interviewvideo/:id/:val" element={/*token !== null && */<InterviewVideo />} />
         <Route path="/packagelist" element={/*token !== null && */<PackageList />} />
         <Route path="/packagequestions/:id" element={/*token !== null && */<PackageQuestionList />} />
         <Route path="/interviewdetail/:id" element={/*token!== null && */ <InterviewQuestions />} />
-        <Route path="/interviewpage" element={<InterviewPage />} />
+        <Route path="/interviewpage/:id" element={<InterviewPage />} />
       </Routes>
     </Router>
   );

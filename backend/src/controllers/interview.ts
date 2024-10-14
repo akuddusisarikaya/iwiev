@@ -58,3 +58,12 @@ export const deleteInterviews = async (req: Request, res: Response): Promise<voi
   }
 };
 
+export const patchInterview = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  try {
+    const patchedPackage = await Interview.findByIdAndUpdate(id, { $set: req.body }, { new: true });
+    res.status(200).json(patchedPackage);
+  } catch (error) {
+    res.status(500).json({ message: 'Soru paketi güncellenirken hata oluştu', error });
+  }
+};

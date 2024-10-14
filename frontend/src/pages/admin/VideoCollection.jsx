@@ -3,49 +3,63 @@ import "../../App.css";
 import AdminDrawer from "../../components/AdminDrawer";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
+import useAPI from "../../store/storeAPI";
 
 export default function VideoCollection() {
-  const [error, setError] = React.useState(null);
+  const { error, loading, fetchData } = useAPI();
   const [interview, setInterview] = React.useState({});
+  const [candidates, setCandidates] = React.useState([]);
+  const [video, setVideo] = React.useState([]);
   const { id } = useParams();
   const nav = useNavigate();
-  const goVideo = () => {
-    nav("/interviewvideo");
+  const goVideo = (e) => {
+    const val = e.target.value
+    nav(`/interviewvideo/${id}/${val}`);
   };
   const goBack = () => {
     nav(-1);
   };
 
+  const getCandidates = async () => {
+    if (id === undefined || id === "undefined") {
+      nav(-1);
+    }
+    const data = await fetchData(`getinterviewbyid/${id}`, "GET");
+    setInterview(data);
+    if (data?.candidates && candidates !== 0) {
+      var newList = [];
+      var videosList = [];
+      for (let i of data.candidates) {
+        const candidateData = await fetchData(`getcandidatebyid/${i}`, "GET");
+        newList.push(candidateData);
+        var candidateID = candidateData._id;
+        var candidateName = candidateData.name;
+        var candidateSurname = candidateData.surname;
+        candidateName += " " + candidateSurname;
+        var candidateVideo = candidateData.video;
+        videosList.push({
+          id: candidateID,
+          name: candidateName,
+          video: candidateVideo,
+        });
+      }
+      setVideo(videosList);
+      setCandidates(newList);
+    }
+  };
+
   React.useEffect(() => {
     const getInter = async () => {
-      try {
-        const token = sessionStorage.getItem("token");
-        const response = await fetch(
-          `http://localhost:3000/api/getinterviewbyid/${id}`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        if(!response.ok) throw new Error("interview did not catch");
-        const data = await response.json();
-        console.log(data)
-        setInterview(data)
-      } catch (error) {
-        setError(error.message);
-      }
+      await getCandidates();
     };
     getInter();
   }, []);
 
-  const Card = ({ name }) => (
+  const Card = ({ valid, name, video }) => (
     <div className="card">
       <h5>{name}</h5>
-      <img alt={name} src="https://via.placeholder.com/250" />
-      <button onClick={goVideo} className="card-info-button">
+      <video className="videocard" alt={name} src={video} value={valid} onClick={goVideo} />
+      <button value={valid} onClick={goVideo} className="card-info-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -72,11 +86,13 @@ export default function VideoCollection() {
           Back
         </button>
         <div className="grid-container">
-          {interview.videos !== null ? (
-            interview.videos.map((video, index)=> (
-              <Card key={index} name={video}/>
+          {video !== null ? (
+            video.map((v, index) => (
+              <Card key={index} valid={v.id} name={v.name} video={v.video} />
             ))
-          ): (<div/>)}
+          ) : (
+            <div />
+          )}
         </div>
       </div>
     </div>
