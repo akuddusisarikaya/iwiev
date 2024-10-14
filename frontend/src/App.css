@@ -904,6 +904,19 @@ input:checked + .slider:before {
 
 .videoButton{
   background-color: white;
-  border : 0 ;
-  
+  border : 0 ; 
+}
+.candiInfo{
+  background-color: #f9f9f9;
+  width: 80%;
+  height: 5vh;
+  margin-bottom: 5px;
+  border: 0;
+}
+
+.changePack{
+  width: 30%;
+  height: 5vh;
+  background-color: 0;
+  border-radius: 1cap;
 }

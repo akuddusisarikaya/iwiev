@@ -37,10 +37,12 @@ export default function VideoCollection() {
         var candidateSurname = candidateData.surname;
         candidateName += " " + candidateSurname;
         var candidateVideo = candidateData.video;
+        var candidateStatus = candidateData.status;
         videosList.push({
           id: candidateID,
           name: candidateName,
           video: candidateVideo,
+          watched : candidateStatus
         });
       }
       setVideo(videosList);
@@ -55,9 +57,10 @@ export default function VideoCollection() {
     getInter();
   }, []);
 
-  const Card = ({ valid, name, video }) => (
+  const Card = ({ valid, name, video, watched }) => (
     <div className="card">
       <h5>{name}</h5>
+      <h6>{watched}</h6>
       <video className="videocard" alt={name} src={video} value={valid} onClick={goVideo} />
       <button value={valid} onClick={goVideo} className="card-info-button">
         <svg
@@ -88,7 +91,7 @@ export default function VideoCollection() {
         <div className="grid-container">
           {video !== null ? (
             video.map((v, index) => (
-              <Card key={index} valid={v.id} name={v.name} video={v.video} />
+              <Card key={index} valid={v.id} name={v.name} video={v.video} watched={v.watched} />
             ))
           ) : (
             <div />

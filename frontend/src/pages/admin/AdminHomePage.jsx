@@ -8,7 +8,7 @@ import SeeLink from "../../components/SeeLink";
 import useAPI from "../../store/storeAPI";
 
 export default function AdminHomePage() {
-  const { error, loading, fetchData } = useAPI();
+  const { error, loading, fetchData, fetchDataOutToken } = useAPI();
   const [sentlink, setLink] = React.useState("");
   const [listOpen, setListOpen] = React.useState(false);
   const [createOpen, setCreateOpen] = React.useState(false);
@@ -68,7 +68,7 @@ export default function AdminHomePage() {
     fetchPackages();
   }, [fetchData]); // fetchData bağımlılığı eklendi.
 
-  const Card = ({ title, total, holdon, value }) => (
+  const Card = ({ stat , title, total, holdon, value }) => (
     <div className="card">
       <button value={value} onClick={handleDetail} className="card-info-button">
         <svg
@@ -147,7 +147,7 @@ export default function AdminHomePage() {
             clipRule="evenodd"
           />
         </svg>
-        Published
+        {stat ? "Active" :  ""}
       </button>
       <button value={value} onClick={seeVideos} className="card-button">
         See Videos
@@ -190,6 +190,7 @@ export default function AdminHomePage() {
               <Card
                 value={pack._id}
                 key={pack._id} // Düzeltildi
+                stat = {pack.activate}
                 title={pack.title_name}
                 total={pack.candidates.length || "0"}
                 holdon={pack.videos.length || "0"}

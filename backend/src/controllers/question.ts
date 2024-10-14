@@ -15,10 +15,13 @@ export const createQuestion = async (req: Request, res: Response): Promise<void>
 
 export const getQuestionsByID = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  const id_val= new mongoose.Types.ObjectId(id);
-
   try {
-    const question = await Question.findById(id_val);
+    const question = await questionService.getQuestionByID(id);
+    if(!question){
+      res.status(404).json({message: "Soru bulunamadı"});
+      return;
+    }
+    res.status(200).json(question);
   } catch (error) {
     res.status(500).json({ message: 'Soru getirilirken hata oluştu', error });
   }

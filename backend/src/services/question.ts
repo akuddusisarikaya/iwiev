@@ -12,9 +12,7 @@ export const getAllQuestions = async () => {
 };
 
 export const getQuestionByID = async (id: string) => {
-  const questid = new mongoose.Types.ObjectId(id);
-  const question = await Question.findById(questid);
-  return question;
+  return await Question.findById(id);
 };
 
 export const updateQuestion = async (id: string, data: any) => {

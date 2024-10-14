@@ -17,7 +17,7 @@ const candidatesSchema = new Schema<ICandidates>({
   email: { type: String, required: true, unique: true }, // Email'in benzersiz olması önemli
   phone_number: { type: String, required: true },
   note: { type: String, default: '' },  // Not alanı boş olabilir
-  status: { type: String, enum: ['pending', 'completed', 'rejected'],  default: 'pending' }, // Durum değerleri sabit olabilir
+  status: { type: String,  default: 'pending' }, // Durum değerleri sabit olabilir
   video_url: { type: String, required: false },
   activate: { type: Boolean, required: true, default: true }, // Aktif olup olmadığını belirten alan
 }, {

@@ -23,3 +23,7 @@ export const updateCandidate = async (id: string, data: any) => {
 export const deleteCandidate = async (id: string) => {
   return await Candidates.findByIdAndDelete(id);
 };
+
+export const patchCandidate = async (id : string) => {
+  return await Candidates.findByIdAndUpdate(id);
+}

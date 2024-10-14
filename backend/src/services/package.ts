@@ -12,8 +12,7 @@ export const getAllPackages = async () => {
 };
 
 export const getPackageByID = async (id: string) => {
-  const packageId = new mongoose.Types.ObjectId(id);
-  return await Package.findById(packageId);
+  return await Package.findById(id);
 };
 
 export const updatePackage = async (id: string, data: any) => {

@@ -1,6 +1,7 @@
 // controllers/candidateController.ts
 import { Request, Response } from 'express';
 import * as candidateService from '../services/candidates';
+import Candidates from '../models/candidates';
 
 export const createCandidate = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -48,5 +49,15 @@ export const deleteCandidate = async (req: Request, res: Response): Promise<void
     res.status(200).json({ message: 'Aday başarıyla silindi' });
   } catch (error) {
     res.status(500).json({ message: 'Aday silinirken hata oluştu', error });
+  }
+};
+
+export const patchCandidate = async (req: Request, res: Response): Promise<void> => {
+  const { id } = req.params;
+  try {
+    const patchedCandidate = await Candidates.findByIdAndUpdate(id, { $set: req.body }, { new: true });
+    res.status(200).json(patchedCandidate);
+  } catch (error) {
+    res.status(500).json({ message: 'Soru paketi güncellenirken hata oluştu', error });
   }
 };

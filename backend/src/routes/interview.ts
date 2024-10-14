@@ -1,5 +1,5 @@
 import express from 'express';
-import { createInterview, getInterviews, updateInterviews, deleteInterviews, getinterviewByID,patchInterview } from '../controllers/interview';
+import { createInterview, getInterviews, updateInterviews, deleteInterviews, getinterviewByID, patchInterview } from '../controllers/interview';
 import { verifyToken } from '../middleware/verifyToken'; // JWT doğrulama middleware
 
 const router = express.Router();
@@ -9,6 +9,6 @@ router.get('/getinterview',verifyToken, getInterviews); // Mülakatları listele
 router.get('/getinterviewbyid/:id', getinterviewByID );
 router.put('/updateinterview/:id', verifyToken, updateInterviews); // Mülakat güncelleme
 router.delete('/deleteinterview/:id', verifyToken, deleteInterviews); // Mülakat silme
-router.patch('/patchinterview/:id', verifyToken,patchInterview);
+router.patch('/patchinterview/:id', verifyToken, patchInterview);
 
 export default router;

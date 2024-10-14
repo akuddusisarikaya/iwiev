@@ -6,6 +6,7 @@ import AddQuestion from "../../components/AddQuestion";
 import { useParams } from "react-router-dom";
 import useAPI from "../../store/storeAPI";
 import ToggleSwitch from "../../components/ToggleSwitch";
+import PackageChange from "../../components/PackageChange";
 
 export default function InterviewQuestions() {
   const { id } = useParams();
@@ -22,6 +23,18 @@ export default function InterviewQuestions() {
   const [interviewQuestions, setInterviewQuestions] = React.useState([]);
   const [packageQuestions, setPackageQuestions] = React.useState([]);
   const [activate, setActivate] = React.useState(true);
+  const [packModal, setPackModal] = React.useState(false);
+
+  const handlePackModalOpen = () => {
+    setPackModal(true);
+  };
+
+  const handlePackModalClose = () => {
+    setPackModal(false);
+  };
+
+  const nav = useNavigate();
+  const goBack = () => nav(-1);
 
   const handleActivate = async (value) => {
     try {
@@ -37,10 +50,10 @@ export default function InterviewQuestions() {
     }
   };
 
-  // Yeni soru ekleme işlevi
   const handleRec = async (quest) => {
     //"quest" değeri kayıttan sonra oluşturulan yeni question ın id değeri!!
     var newArr = [...interviewQuestions, quest];
+    console.log(newArr);
     setInterviewQuestions(newArr);
     const newBody = { question: newArr };
     await setData(`patchinterview/${id}`, "PATCH", newBody);
@@ -129,9 +142,6 @@ export default function InterviewQuestions() {
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
 
-  const nav = useNavigate();
-  const goBack = () => nav(-1);
-
   return (
     <div>
       <AdminDrawer />
@@ -158,6 +168,19 @@ export default function InterviewQuestions() {
             isOpen={questionOpen}
             onClose={handleClose}
             onChange={handleRec}
+          />
+          <button
+            onClick={packModal ? handlePackModalClose : handlePackModalOpen}
+            className="add-button2"
+          >
+            {packModal ? "Close" : "ChangePackage"}
+          </button>
+          <PackageChange
+            isModalOpen={packModal}
+            onClose={handlePackModalClose}
+            onClick={handlePackModalOpen}
+            value={pack._id}
+            interview={id}
           />
           <br />
           <table className="question-table">
