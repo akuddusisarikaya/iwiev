@@ -83,38 +83,30 @@ export default function InterviewQuestions() {
     if (id === undefined || id === "undefined") {
       nav("/adminhomepage");
     }
+    var interQuestList = []
+    var packQuestList = []
     try {
-      const data = await fetchData(`getinterviewbyid/${id}`, "GET");
-      setInterview(data);
-      if (!data?.package && data.package.length <= 0) {
-        return;
+      const interData = await fetchData(`getinterviewbyid/${id}`, "GET");
+      if (interData?.question && interData.question.length > 0) {
+        interQuestList = interData.question;
+        setInterviewQuestions(interQuestList);
       }
-      const pac = await fetchData(`getpackagebyid/${data.package}`, "GET");
-      if (data?.question && data.question !== null) {
-        setInterviewQuestions(data.question);
+      setInterview(interData)
+      if (interData.package && interData.question !== "") {
+        const packData = await fetchData(`getpackagebyid/${interData.package}`, "GET");
+        setPack(packData)
+        packQuestList = packData.question;
+        setPackageQuestions(packQuestList);
       }
-      setPack(pac);
-      setPackageQuestions(pac.question);
-      if (
-        (data?.question && data.question.length > 0) ||
-        (pac?.question && pac.question.length > 0)
-      ) {
-        const questData = data.question;
-        const pacquestData = pac.question;
-        const mergedList = [...questData, ...pacquestData];
-        if (mergedList !== null && mergedList.length > 0) {
-          var newList = [];
-          for (let i of mergedList) {
-            const data = await fetchData(`getquestionbyid/${i}`, "GET");
-            if (data !== null) {
-              newList.push(data);
-            }
-          }
-          setQuestions(newList);
-        }
+      const mergedList = [...interQuestList, ...packQuestList];
+      var questList = []
+      for(let i of mergedList){
+        const questData = await fetchData(`getquestionbyid/${i}`, "GET");
+        questList.push(questData)
       }
+      setQuestions(questList)
     } catch (err) {
-      console.error("Package error : ", err);
+      console.error("Error loading Page: " , err.message)
     }
   };
 

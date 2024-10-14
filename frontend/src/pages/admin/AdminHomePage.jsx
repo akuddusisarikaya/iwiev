@@ -66,6 +66,9 @@ export default function AdminHomePage() {
       setPackages(data);
     };
     fetchPackages();
+    if(packages === null){
+      nav(0);
+    }
   }, [fetchData]); // fetchData bağımlılığı eklendi.
 
   const Card = ({ stat , title, total, holdon, value }) => (
