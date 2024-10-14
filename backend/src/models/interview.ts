@@ -8,7 +8,6 @@ export interface IInterview extends Document {
   candidates: string[]; // Adaylar dizisi
   can_skip: boolean;
   showing: boolean;
-  videos : string[];
   activate: boolean;
 }
 
@@ -20,7 +19,6 @@ const interviewSchema = new Schema<IInterview>({
   candidates: { type: [String], required: true }, // Adayların dizisi
   can_skip: { type: Boolean, required: true, default: false }, // Sorunun atlanabilir olup olmadığı
   showing: { type: Boolean, required: true, default: true }, // Sorunun gösterilip gösterilmediği
-  videos : {type: [String], required: false},
   activate: { type: Boolean, required: true, default: true }, // Aktif olup olmadığını belirten alan
 }, {
   timestamps: true, // createdAt ve updatedAt alanları otomatik olarak eklenecek

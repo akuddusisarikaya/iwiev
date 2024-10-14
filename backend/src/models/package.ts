@@ -12,7 +12,6 @@ export interface IPackage extends Document {
 const packageSchema = new Schema<IPackage>({
   name: { type: String, required: true },
   question: { type: [String], required: true }, // Sorular dizisi
-  
 });
 
 const Package = model<IPackage>('Package', packageSchema);

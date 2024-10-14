@@ -12,8 +12,7 @@ export const getAllInterviews = async () => {
 };
 
 export const getInterviewByID = async (id: string) => {
-  const questid = new mongoose.Types.ObjectId(id);
-  return await Interview.findById(questid);
+  return await Interview.findById(id);
 };
 
 export const updateInterview = async (id: string, data: any) => {

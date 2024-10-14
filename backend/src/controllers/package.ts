@@ -1,19 +1,13 @@
 import { Request, Response } from 'express';
 import Package from '../models/package';
 import mongoose from 'mongoose';
+import * as packageServices from "../services/package";
 
 // Soru Paketi Oluşturma (Create)
 export const createPackage = async (req: Request, res: Response): Promise<void> => {
   try {
-    const {  name, question } = req.body;
-
-    const newPackage = new Package({
-      name,
-      question,
-    });
-
-    await newPackage.save();
-    res.status(201).json(newPackage);
+    await packageServices.createPackage(req.body);
+    res.status(201).json({message : "Paket oluşturuldu"});
   } catch (error) {
     res.status(500).json({ message: 'Soru paketi oluşturulurken hata oluştu', error });
   }
@@ -22,7 +16,7 @@ export const createPackage = async (req: Request, res: Response): Promise<void> 
 // Tüm Soru Paketlerini Listeleme (Read)
 export const getPackages = async (req: Request, res: Response): Promise<void> => {
   try {
-    const packages = await Package.find();
+    const packages = await packageServices.getAllPackages();
     res.status(200).json(packages);
   } catch (error) {
     res.status(500).json({ message: 'Soru paketleri getirilirken hata oluştu', error });
@@ -31,9 +25,8 @@ export const getPackages = async (req: Request, res: Response): Promise<void> =>
 
 export const getPackageByID = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
-  const questid = new mongoose.Types.ObjectId(id)
   try {
-    const pack = await Package.findById(questid);
+    const pack = await packageServices.getPackageByID(id);
     res.status(200).json(pack);
   } catch (error) {
     res.status(500).json({ message: 'Soru paketi getirilirken hata oluştu', error });
@@ -44,7 +37,7 @@ export const getPackageByID = async (req: Request, res: Response): Promise<void>
 export const updatePackage = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   try {
-    const updatedPackage = await Package.findByIdAndUpdate(id, req.body, { new: true });
+    const updatedPackage = await packageServices.updatePackage(id, req.body);
     res.status(200).json(updatedPackage);
   } catch (error) {
     res.status(500).json({ message: 'Soru paketi güncellenirken hata oluştu', error });
@@ -55,7 +48,7 @@ export const updatePackage = async (req: Request, res: Response): Promise<void> 
 export const deletePackage = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   try {
-    await Package.findByIdAndDelete(id);
+    await packageServices.deletePackage(id);
     res.status(200).json({ message: 'Soru paketi başarıyla silindi' });
   } catch (error) {
     res.status(500).json({ message: 'Soru paketi silinirken hata oluştu', error });
@@ -65,7 +58,7 @@ export const deletePackage = async (req: Request, res: Response): Promise<void> 
 export const patchPackage = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   try {
-    const patchedPackage = await Package.findByIdAndUpdate(id, { $set: req.body }, { new: true });
+    const patchedPackage = await packageServices.patchPackage(id, req.body);
     res.status(200).json(patchedPackage);
   } catch (error) {
     res.status(500).json({ message: 'Soru paketi güncellenirken hata oluştu', error });

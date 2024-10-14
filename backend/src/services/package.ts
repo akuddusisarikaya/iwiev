@@ -1,6 +1,5 @@
 // services/packageService.ts
 import Package from '../models/package';
-import mongoose from 'mongoose';
 
 export const createPackage = async (data: any) => {
   const newPackage = new Package(data);
@@ -22,3 +21,7 @@ export const updatePackage = async (id: string, data: any) => {
 export const deletePackage = async (id: string) => {
   return await Package.findByIdAndDelete(id);
 };
+
+export const patchPackage = async (id:string, data :any) => {
+  return await Package.findByIdAndUpdate(id, data);
+}

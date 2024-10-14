@@ -55,7 +55,7 @@ export const deleteCandidate = async (req: Request, res: Response): Promise<void
 export const patchCandidate = async (req: Request, res: Response): Promise<void> => {
   const { id } = req.params;
   try {
-    const patchedCandidate = await Candidates.findByIdAndUpdate(id, { $set: req.body }, { new: true });
+    const patchedCandidate = await candidateService.patchCandidate(req.params.id,req.body);
     res.status(200).json(patchedCandidate);
   } catch (error) {
     res.status(500).json({ message: 'Soru paketi güncellenirken hata oluştu', error });

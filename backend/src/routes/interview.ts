@@ -9,6 +9,6 @@ router.get('/getinterview',verifyToken, getInterviews); // Mülakatları listele
 router.get('/getinterviewbyid/:id', getinterviewByID );
 router.put('/updateinterview/:id', verifyToken, updateInterviews); // Mülakat güncelleme
 router.delete('/deleteinterview/:id', verifyToken, deleteInterviews); // Mülakat silme
-router.patch('/patchinterview/:id', verifyToken, patchInterview);
+router.patch('/patchinterview/:id', patchInterview);
 
 export default router;

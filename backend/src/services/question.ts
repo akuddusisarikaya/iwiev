@@ -1,6 +1,5 @@
 // services/questionService.ts
 import Question from '../models/question';
-import mongoose from 'mongoose';
 
 export const createQuestion = async (data: any) => {
   const newQuestion = new Question(data);
@@ -22,3 +21,7 @@ export const updateQuestion = async (id: string, data: any) => {
 export const deleteQuestion = async (id: string) => {
   return await Question.findByIdAndDelete(id);
 };
+
+export const patchQuestion = async (id : string, data : any) => {
+  return await Question.findByIdAndUpdate(id, data);
+}
