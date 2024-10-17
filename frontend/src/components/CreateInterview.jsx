@@ -8,7 +8,7 @@ export default function CreatInterview({ isModalOpen, onClose }) {
   const nav = useNavigate();
   const { loading, error, fetchData, setData } = useAPI();
   const [title, setTitle] = React.useState("");
-  const [pack, setPack] = React.useState([]);
+  //const [pack, setPack] = React.useState([]);
   const [selectedPack, setSelectedPack] = React.useState("");
   const [skip, setSkip] = React.useState(false);
   const [show, setShow] = React.useState(false);
@@ -17,9 +17,9 @@ export default function CreatInterview({ isModalOpen, onClose }) {
     setTitle(e.target.value);
   };
 
-  const handlePackages = (e) => {
+  /*const handlePackages = (e) => {
     setSelectedPack(e.target.value);
-  };
+  };*/
 
   const handleSkip = (value) => {
     setSkip(value);
@@ -29,6 +29,7 @@ export default function CreatInterview({ isModalOpen, onClose }) {
     setShow(value);
   };
 
+  /*
   React.useState(() => {
     const fetchPakages = async () => {
       const link = "/getpackage";
@@ -38,6 +39,7 @@ export default function CreatInterview({ isModalOpen, onClose }) {
     };
     fetchPakages();
   }, []);
+  */
 
   const submitButton = async () => {
     const link = "/creatinterview";
@@ -69,7 +71,7 @@ export default function CreatInterview({ isModalOpen, onClose }) {
               onChange={handleTitle}
               className="create-text-field"
             ></input>
-            <h3>Package:</h3>
+            {/*<h3>Package:</h3>
             <select
               type="select"
               onChange={handlePackages}
@@ -85,7 +87,7 @@ export default function CreatInterview({ isModalOpen, onClose }) {
               ) : (
                 <div />
               )}
-            </select>
+            </select>*/}
             <div className="form-group">
               <br />
               <ToggleSwitch

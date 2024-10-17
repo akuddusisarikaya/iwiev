@@ -1,14 +1,34 @@
-import cloudinary from 'cloudinary';
+import AWS from "aws-sdk";
 
-cloudinary.v2.config({
-  cloud_name: process.env.CLOUD_NAME,
-  api_key: process.env.API_KEY,
-  api_secret: process.env.API_SECRET
+const s3 = new AWS.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
 });
 
-export const uploadVideo = async (file: Express.Multer.File) => {
-  return await cloudinary.v2.uploader.upload(file.path, {
-    resource_type: 'video',
-    folder: 'videos'
-  });
+interface UploadResult {
+  Location: string;
+  Bucket: string;
+  Key: string;
+}
+
+export const uploadVideoToS3 = async (
+  fileBuffer: Buffer,
+  fileName: string,
+  mimeType: string
+): Promise<UploadResult> => {
+  const params = {
+    Bucket: process.env.AWS_BUCKET_NAME as string,
+    Key: `videos/${Date.now()}_${fileName}`,
+    Body: fileBuffer,
+    ContentType: mimeType,
+    ACL: "public-read",
+  };
+
+  try {
+    const result = await s3.upload(params).promise();
+    return result;
+  } catch (err) {
+    console.error("S3'e yükleme hatası:", err);
+    throw new Error("Video yükleme başarısız.");
+  }
 };

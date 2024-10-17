@@ -1,86 +1,103 @@
 import * as React from "react";
 import "../../App.css";
 import PersonalInfoForm from "../../components/PersonalInfoForm";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useAPI from "../../store/storeAPI";
-import CountdownTimer from "../../components/CountdownTimer";
+import QuestionCardList from "../../components/QuestionCardList";
+import VideoRecorder from "../../components/VideoRecorder";
 
 export default function InterviewPage() {
-  const { error, loading, fetchData, setData } = useAPI();
-  const [currentCardIndex, setCurrentCardIndex] = React.useState(0);
-  const [startInterview, setStarInterview] = React.useState(false);
-  const [totalTime, setTotalTime] = React.useState(0);
-  const [quesetTime, setQuestTime] = React.useState([]);
-  const [questions, setQuestions] = React.useState([]);
+  const nav = useNavigate();
+  const { fetchData, setData } = useAPI();
+  const [isStart, setIsStart] = React.useState(false);
+  const [candidate, setCandidate] = React.useState("");
+  const [candiOK, setCandiOK] = React.useState(false);
+  const [inter, setInter] = React.useState({});
+  const [videoURL, setVideoURL] = React.useState("");
+  const [allQuestions, setAllQuestions] = React.useState([]);
   const [modalPen, setModalPen] = React.useState(true);
   const { id } = useParams();
 
-  const fecthQuestions = async () => {
-    const data = await fetchData(`getinterviewbyid/${id}`, "GET");
-    if (data.package === null && data.package.length <= 0) {
-      return;
-    }
-    const packData = await fetchData(`getpackagebyid/${data.package}`, "GET");
-    if (!packData?.questions && packData.questions === null) {
-      return;
-    }
-    const packQuests = packData.question;
-    if (!data.question && data.question.length <= 0) {
-      return;
-    }
-    const interQuests = data.question;
-    const mergedQuest = [...packQuests, ...interQuests];
-    if (mergedQuest !== null && mergedQuest.length > 0) {
-      var newList = [];
-      for (let i of mergedQuest) {
-        const quest = await fetchData(`getquestionbyid/${i}`, "GET");
-        newList.push(quest);
-      }
-      setQuestions(newList);
-    }
+  const handleCandidate = (e) => {
+    setCandidate(e);
+  };
+
+  const handleStart = () => {
+    setIsStart(true);
+  };
+  const handleVideoURL = (e) => {
+    setVideoURL(e);
   };
 
   React.useEffect(() => {
-    if (id === undefined || id === "undefined") {
-      return;
+    if (
+      candidate &&
+      candidate !== null &&
+      candidate !== undefined &&
+      candidate !== "undefined"
+    ) {
+      setCandiOK(true);
+    } else if (
+      candidate === null ||
+      candidate === undefined ||
+      candidate === "undefined"
+    ) {
+      setCandiOK(false);
     }
-    fecthQuestions();
-    var time = 0;
-    for (let i of questions) {
-      time += Number(i.timer);
-    }
-    setTotalTime(time);
-    for (let j of questions) {
-      const qid = j._id;
-      const timer = j.timer;
+  }, [candidate]);
 
-      setQuestTime((prevTime) => {
-        return [...prevTime, { [qid]: timer }];
-      });
+  const fetchQuestions = async () => {
+    try {
+      const interData = await fetchData(`getinterviewbyid/${id}`, "GET");
+      setInter(interData);
+      if (interData?.question?.length > 0) {
+        var newList = [];
+        for (let i of interData.question) {
+          const questData = await fetchData(`getquestionbyid/${i}`, "GET");
+          newList.push(questData);
+        }
+        setAllQuestions(newList);
+      }
+    } catch (err) {
+      console.error("Sorular çekilirken hata oluştu", err.message);
+    }
+  };
+  React.useEffect(() => {
+    if (id === undefined || id === "undefined") {
+    }
+    fetchQuestions();
+    if (!allQuestions || allQuestions.length <= 0) {
+      console.error("hata");
     }
   }, [id]);
 
   const handleModelClose = () => {
     setModalPen(false);
   };
-
   return (
     <div className="interview-page">
-      <PersonalInfoForm isModalOpen={modalPen} onClose={handleModelClose} />
-      <div className="h5container">
-        <h5 className="interview-question-numb">Soru Numarası: 2 / 10</h5>{" "}
-        <h5 className="interview-question-numb">Kalan Süre: 15 dak </h5>
-      </div>
-
-      <textarea
-        disabled
-        placeholder="What is Big-O notation?"
-        className="interview-text-area"
-      ></textarea>
-      <video className="interview-video" controls>
-        <source src="path_to_video.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      <PersonalInfoForm
+        handleCandi={handleCandidate}
+        isModalOpen={modalPen}
+        onClose={handleModelClose}
+        interid={id}
+      />
+      {candiOK ? (
+        <div style={{ marginTop: "10%" }}>
+          {isStart && (
+            <QuestionCardList questions={allQuestions} canSkip={true} />
+          )}
+          <button onClick={handleStart} className="interview-button">
+            {" "}
+            Başla
+          </button>
+          <div style={{ marginLeft: "25%" }}>
+            <VideoRecorder handleURL={handleVideoURL} />
+          </div>
+        </div>
+      ) : (
+        <div />
+      )}
       <button className="interview-button"> Kaydı Bitir ve Gönder</button>
     </div>
   );

@@ -1,7 +1,7 @@
 import * as React from "react"
 import "../App.css"
 
-const MinuteInput = ({onChange, val}) => {
+const MinuteInput = ({onChange, val, placeholder}) => {
     const [minutes, setMinutes] = React.useState(val);
   
     const handleMinuteChange = (e) => {
@@ -16,13 +16,13 @@ const MinuteInput = ({onChange, val}) => {
       <div className="minute-input">
         <label htmlFor="minutes">Enter time (in minutes): </label>
         <input
+          placeholder={placeholder}
           type="number"
           id="minutes"
           min="0"
           max="59"
           value={minutes}
           onChange={handleMinuteChange}
-          placeholder="0-59"
         />
       </div>
     );

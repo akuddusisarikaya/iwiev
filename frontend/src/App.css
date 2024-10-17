@@ -6,7 +6,33 @@ Gri : #c0c9c0
 Açık Yeşil - Turkuaz : #acddda
 */
 
-
+body{
+  font-family: Montserrat;
+}
+textarea{
+  font-family: Montserrat;
+}
+p{
+  font-family: Montserrat;
+}
+h1{
+  font-family: Montserrat;
+}
+h2{
+  font-family: Montserrat;
+}
+h3{
+  font-family: Montserrat;
+}
+h4{
+  font-family: Montserrat;
+}
+h5{
+  font-family: Montserrat;
+}
+h6{
+  font-family: Montserrat;
+}
 .header{
   display: block;
   position: absolute;
@@ -15,7 +41,20 @@ Açık Yeşil - Turkuaz : #acddda
   left: 0;
   width: 100vw;
   height: 10%;
-  background-color: #acddda;
+  background-image: url(/src/assets/drrawer.png);
+  background-size: cover;
+  background-position: center;
+  color: white;
+}
+
+.adminpage{
+  margin-top: 7%;
+  margin-left: 10%;
+}
+.iviewlogo{
+  margin-top: 1%;
+  margin-left: 45%;
+  height: 50px;
 }
 .loginPage{
   margin:15%;
@@ -50,6 +89,7 @@ Açık Yeşil - Turkuaz : #acddda
   border: none;
   font-size: large;
   text-transform: uppercase;
+  margin-left: 5%;
   margin-bottom: 5%;
 }
 
@@ -115,7 +155,10 @@ Açık Yeşil - Turkuaz : #acddda
 .adminDrawer{
   height:100vh;
   place-items: center;
-  background-color:#acddda;
+  background-image: url(/src/assets/drrawer.png);
+  background-size: cover;
+  background-position: center;
+  color: white;
   opacity: 100%;
   position: fixed;
   left: 0;
@@ -131,22 +174,25 @@ Açık Yeşil - Turkuaz : #acddda
 }
 
 .listButton{
+  font-family: Montserrat;
   font-size: 30px;
   place-items: center;
   font-size: medium;
+  margin-left: 5%;
   margin-top: 2%;
   margin-bottom: 2%;
   min-height: 70px;
-  width: 100%;
+  width: 90%;
   background-color: #acddda;
   border: 0px;
   text-align: center;
   text-transform: capitalize;
+  border-radius: 3rcap;
 }
 .listButton:hover{
   background-color: #f8ca55;
   color: #3d8d88;
-  border-radius: 1rcap;
+  border-radius: 3rcap;
 }
 
 .questionpack{
@@ -170,16 +216,19 @@ Açık Yeşil - Turkuaz : #acddda
 }
 
 .admindrawerlogout{
-  width: 100%;
+  font-family: Montserrat;
+  width: 90%;
+  margin-left: 5%;
   min-height: 50px;
   margin-top: 10%;
   background-color: #acddda;
   border: 0px;
   font-size: larger;
+  border-radius: 3rcap;
 }
 .admindrawerlogout:hover{
   background-color: #f8ca55;
-  border-radius: 1cap;
+  border-radius: 3cap;
 }
 
 .adminDrawerOpen{
@@ -218,6 +267,7 @@ Açık Yeşil - Turkuaz : #acddda
   text-align: center;
 }
 .card-delete-button{
+  font-family: Montserrat;
   border: 0;
   width: 80px;
   height: 40px;
@@ -229,6 +279,7 @@ Açık Yeşil - Turkuaz : #acddda
 }
 
 .card-link-button{
+  font-family: Montserrat;
   border: 0;
   width: 100px;
   height: 40px;
@@ -240,6 +291,7 @@ Açık Yeşil - Turkuaz : #acddda
 }
 
 .card-info-button{
+  font-family: Montserrat;
   border: 0;
   width: 80px;
   height: 40px;
@@ -255,7 +307,7 @@ Açık Yeşil - Turkuaz : #acddda
   margin-left: 10%;
   width: 80%;
   height: 30%;
-  background-color: silver;
+  background-color: #acddda;
   border-radius: 1cap;
   border: solid gray 1px;
   box-shadow: 1px 1px silver;
@@ -268,7 +320,7 @@ Açık Yeşil - Turkuaz : #acddda
 }
 
 .card-title {
-  font-size: 1.5rem;
+  font-size: 1rem;
   margin-top: 10px;
 }
 
@@ -279,15 +331,15 @@ Açık Yeşil - Turkuaz : #acddda
 }
 
 .card-button {
-  width: 30%;
+  font-family: Montserrat;
+  min-width: 30%;
   height: 10%;
   background-color: white;
   border: none;
-  margin-top: 15px;
   cursor: pointer;
-  margin-left: 25%;
 }
 .card-button2 {
+  font-family: Montserrat;
   margin-right: 10%;
   width: 35%;
   height: 10%;
@@ -661,6 +713,7 @@ input:checked + .slider:before {
 
 .edit-button,
 .delete-button {
+  font-family: Montserrat;
   background: none;
   border: none;
   cursor: pointer;
@@ -781,7 +834,9 @@ input:checked + .slider:before {
 .h5container{
   display: flex;
   justify-content: center;
+  margin-top: 5%;
 }
+
 .interview-text-input{
   margin-left: 10%;
 }
@@ -792,7 +847,7 @@ input:checked + .slider:before {
 }
 
 .interview-page{
-  margin-top: 5%;
+  margin-top:2%;
 }
 
 .interview-question-numb{
@@ -806,22 +861,22 @@ input:checked + .slider:before {
   height: 10vh;
   width: 90%;
   margin-left: 5%;
-  margin-bottom: 5%;
+  margin-bottom: 2%;
   color: black;
   text-align: center;
 }
 .interview-video{
-  width: 90%;
-  margin-left: 5%;
+  width: 50%;
+  margin-left: 25%;
   margin-bottom: 5%;
 }
 .chekbox-container{
   margin-top: 5%;
 }
 .interview-button{
-  margin-left: 25%;
-  margin-bottom: 5%;
-  width: 50%;
+  margin-left: 37%;
+  margin-bottom: 2%;
+  width: 25%;
   height: 5vh;
   background-color: #3d8d88;
   border: none;
@@ -833,6 +888,10 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 768px){
+  .iviewlogo{
+    margin-top: 5%;
+    margin-left: 35%;
+  }
   .h5container{
     position: inherit;
     display: flex;
@@ -853,7 +912,7 @@ input:checked + .slider:before {
     height: 10vh;
     width: 85%;
     margin-left: 5%;
-    margin-bottom: 10%;
+    margin-bottom: 5%;
     color: black;
     text-align: center;
   }
@@ -866,20 +925,6 @@ input:checked + .slider:before {
     height: 25vh;
     margin-left: 5%;
     margin-bottom: 5%;
-  }
-  
-  .interview-button{
-    margin-left: 25%;
-    margin-bottom: 5%;
-    width: 50%;
-    height: 5vh;
-    background-color: #3d8d88;
-    border: none;
-    border-radius: 2cap;
-  }
-  .interview-button:hover{
-    background-color: #acddda;
-    color: #f8ca55;
   }
   .modal{
     width: 100%;
@@ -919,4 +964,37 @@ input:checked + .slider:before {
   height: 5vh;
   background-color: 0;
   border-radius: 1cap;
+}
+
+.questionCard{
+  width: 80%;
+  min-height: 15vh;
+  margin: 2%;
+  margin-top: 10%;
+  border: 20px solid #3d8d88;
+  border-radius: 5rcap;
+  padding: 2%;
+  margin-left: 8%;
+}
+.cardinfo{
+  display: flex;
+}
+.newh6{
+  margin-left: 20%;
+}
+@media (max-width: 768px){
+  .questionCard{
+    width: 80%;
+    margin-top: 35%;
+    padding: 2%;
+  }
+  .interview-button{
+    margin-left: 25%;
+    margin-bottom: 2%;
+    width: 50%;
+    height: 5vh;
+    background-color: #3d8d88;
+    border: none;
+    border-radius: 2cap;
+  }
 }

@@ -1,12 +1,12 @@
-import { Router } from 'express';
-import multer from 'multer';
-import { uploadVideoController } from '../controllers/video';
-
+import { Router } from "express";
+import { uploadVideo } from "../controllers/video";
+import multer from "multer";
+import { asyncHandler } from "../middleware/asyncHandler";
 
 const router = Router();
-const upload = multer({ dest: 'uploads/' });  // Dosyaları geçici olarak buraya kaydeder
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
-// Video yükleme endpoint'i
-router.post('/upload', upload.single('video'), uploadVideoController);
+router.post("/upload", upload.single("video"), asyncHandler(uploadVideo));
 
 export default router;

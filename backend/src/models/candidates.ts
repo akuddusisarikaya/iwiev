@@ -5,6 +5,7 @@ export interface ICandidates extends Document {
     surname: string;
     email: string;
     phone_number: string;
+    interview : string;
     note: string;
     status: string;
     video_url: string;
@@ -15,11 +16,12 @@ const candidatesSchema = new Schema<ICandidates>({
   name: { type: String, required: true },
   surname: { type: String, required: true },
   email: { type: String, required: true, unique: true }, // Email'in benzersiz olması önemli
-  phone_number: { type: String, required: true },
+  phone_number: { type: String, required: true, unique:true },
+  interview : {type: String, required: true},
   note: { type: String, default: '' },  // Not alanı boş olabilir
   status: { type: String,  default: 'pending' }, // Durum değerleri sabit olabilir
-  video_url: { type: String, required: false },
-  activate: { type: Boolean, required: true, default: true }, // Aktif olup olmadığını belirten alan
+  video_url: { type: String},
+  activate: { type: Boolean, default: true }, // Aktif olup olmadığını belirten alan
 }, {
   timestamps: true,  // createdAt ve updatedAt alanlarını otomatik ekler
 });

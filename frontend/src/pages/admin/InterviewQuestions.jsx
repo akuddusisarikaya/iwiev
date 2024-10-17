@@ -1,12 +1,13 @@
 import * as React from "react";
 import "../../App.css";
-import AdminDrawer from "../../components/AdminDrawer";
+//import AdminDrawer from "../../components/AdminDrawer";
 import { useNavigate } from "react-router-dom";
 import AddQuestion from "../../components/AddQuestion";
+import EditQuestion from "../../components/EditQuestion";
 import { useParams } from "react-router-dom";
 import useAPI from "../../store/storeAPI";
 import ToggleSwitch from "../../components/ToggleSwitch";
-import PackageChange from "../../components/PackageChange";
+//import PackageChange from "../../components/PackageChange";
 
 export default function InterviewQuestions() {
   const { id } = useParams();
@@ -15,22 +16,34 @@ export default function InterviewQuestions() {
       nav("/adminhomepage");
     }
   });
-  const { error, loading, fetchData, setData } = useAPI();
-  const [pack, setPack] = React.useState({});
+  const { fetchData, setData } = useAPI();
+  //const [pack, setPack] = React.useState({});
+  const [editID, setEditID] = React.useState("");
   const [questionOpen, setIsOpen] = React.useState(false);
+  const [editOpen, setEditOpen] = React.useState(false);
   const [interview, setInterview] = React.useState({});
   const [questions, setQuestions] = React.useState([]);
   const [interviewQuestions, setInterviewQuestions] = React.useState([]);
   const [packageQuestions, setPackageQuestions] = React.useState([]);
   const [activate, setActivate] = React.useState(true);
-  const [packModal, setPackModal] = React.useState(false);
+  //const [packModal, setPackModal] = React.useState(false);
 
-  const handlePackModalOpen = () => {
+  /*const handlePackModalOpen = () => {
     setPackModal(true);
-  };
+  };*/
 
-  const handlePackModalClose = () => {
+  /*const handlePackModalClose = () => {
     setPackModal(false);
+  };*/
+
+  const handleEdit = (e) => {
+    if(interview.candidates.length>0){
+      alert("Bu mülakattaki soruları değiştiremezsiniz.");
+      return;
+    }
+    const edit = e.target.value;
+    setEditID(edit);
+    setEditOpen(true);  // Düzenleme modal'ını açıyoruz
   };
 
   const nav = useNavigate();
@@ -51,6 +64,10 @@ export default function InterviewQuestions() {
   };
 
   const handleRec = async (quest) => {
+    if(interview.candidates.length > 0){
+      alert("Bu mülakata yeni kayıt yapamazsınız.")
+      return
+    }
     //"quest" değeri kayıttan sonra oluşturulan yeni question ın id değeri!!
     var newArr = [...interviewQuestions, quest];
     console.log(newArr);
@@ -62,53 +79,74 @@ export default function InterviewQuestions() {
 
   // Soru silme işlevi
   const handleDelete = async (e) => {
+    if(interview.candidates.length > 0 ){
+      alert("Bu mülakattaki soruları silemezsiniz.");
+      return;
+    }
     const delID = e.target.value;
-    if (packageQuestions.includes(delID)) {
-      const newPackQuestion = packageQuestions;
-      packageQuestions.splice(packageQuestions.indexOf(delID), 1);
-      const newBody = { question: newPackQuestion };
-      await setData(`updatepackage/${pack._id}`, "PUT", newBody);
-    } else {
       const newIntQuestions = interviewQuestions;
       interviewQuestions.splice(interviewQuestions.indexOf(delID), 1);
       const newBody = { question: newIntQuestions };
       await setData(`updateinterview/${id}`, "PUT", newBody);
-    }
     await fetchData(`deletequestion/${delID}`, "DELETE");
 
     loadPage();
+    nav(0);
   };
 
   const loadPage = async () => {
+    const interData = await fetchData(`getinterviewbyid/${id}`, "GET");
+    if(interData){
+      setInterview(interData);
+      if(interData?.question && interData?.question?.length > 0){
+        setInterviewQuestions(interData.question);
+        var list = [];
+        for(let i of interData.question){
+          try {
+            const questData = await fetchData(`getquestionbyid/${i}`, "GET");
+            list.push(questData);
+          } catch (err) {
+            console.error("soru çekme hatası", err);
+          }
+        }
+        setQuestions(list);
+      }
+    }
+  }
+
+  /*const loadPage = async () => {
     if (id === undefined || id === "undefined") {
       nav("/adminhomepage");
     }
-    var interQuestList = []
-    var packQuestList = []
+    var interQuestList = [];
+    var packQuestList = [];
     try {
       const interData = await fetchData(`getinterviewbyid/${id}`, "GET");
       if (interData?.question && interData.question.length > 0) {
         interQuestList = interData.question;
         setInterviewQuestions(interQuestList);
       }
-      setInterview(interData)
+      setInterview(interData);
       if (interData.package && interData.question !== "") {
-        const packData = await fetchData(`getpackagebyid/${interData.package}`, "GET");
-        setPack(packData)
+        const packData = await fetchData(
+          `getpackagebyid/${interData.package}`,
+          "GET"
+        );
+        setPack(packData);
         packQuestList = packData.question;
         setPackageQuestions(packQuestList);
       }
       const mergedList = [...interQuestList, ...packQuestList];
-      var questList = []
-      for(let i of mergedList){
+      var questList = [];
+      for (let i of mergedList) {
         const questData = await fetchData(`getquestionbyid/${i}`, "GET");
-        questList.push(questData)
+        questList.push(questData);
       }
-      setQuestions(questList)
+      setQuestions(questList);
     } catch (err) {
-      console.error("Error loading Page: " , err.message)
+      console.error("Error loading Page: ", err.message);
     }
-  };
+  };*/
 
   React.useEffect(() => {
     if (id === undefined || id === "undefined") {
@@ -131,20 +169,25 @@ export default function InterviewQuestions() {
     loadPage(); // Sayfa yükleme fonksiyonu çağrılıyor
   }, [id, fetchData]);
 
-  const handleOpen = () => setIsOpen(true);
+  const handleOpen = () => {
+    if(interview.candidates.length > 0 ){
+      alert("Bu mülakata soru ekleyemezsiniz.");
+      return;
+    }
+    setIsOpen(true)
+  };
   const handleClose = () => setIsOpen(false);
+  const handleEditClose = () => setEditOpen(false);
 
   return (
     <div>
-      <AdminDrawer />
-      <div className="adminDrawerOpen">
-        {error && <h3>{error}</h3>}
-        {loading && <h3>Loading...</h3>}
+      {/*<AdminDrawer />*/}
+      <div /*className="adminDrawerOpen"*/ style={{marginTop: "7%"}}>
         <button className="back-button" onClick={goBack}>
           Back
         </button>
         <div className="question-table-container">
-          <h3>{interview.title_name || "INTERVIEW TITLE"}</h3>
+          <h3>{interview.title_name}</h3>
           <ToggleSwitch
             label="Activate"
             onChange={handleActivate}
@@ -161,7 +204,8 @@ export default function InterviewQuestions() {
             onClose={handleClose}
             onChange={handleRec}
           />
-          <button
+          <EditQuestion isOpen={editOpen} onClose={handleEditClose} val={editID} />
+          {/*<button
             onClick={packModal ? handlePackModalClose : handlePackModalOpen}
             className="add-button2"
           >
@@ -173,7 +217,7 @@ export default function InterviewQuestions() {
             onClick={handlePackModalOpen}
             value={pack._id}
             interview={id}
-          />
+          />*/}
           <br />
           <table className="question-table">
             <thead>
@@ -193,6 +237,13 @@ export default function InterviewQuestions() {
                     <td>{q?.question}</td>
                     <td>{q?.timer}</td>
                     <td>
+                      <button
+                        value={q?._id}
+                        onClick={handleEdit}
+                        className="edit-button"
+                      >
+                        {editOpen ? "Cancel" : "Edit"}
+                      </button>
                       <button
                         id={index}
                         value={q?._id}

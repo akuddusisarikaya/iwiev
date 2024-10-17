@@ -1,12 +1,12 @@
 import * as React from "react";
 import "../../App.css";
-import AdminDrawer from "../../components/AdminDrawer";
+//import AdminDrawer from "../../components/AdminDrawer";
 import { useNavigate } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import useAPI from "../../store/storeAPI";
 
 export default function VideoCollection() {
-  const { error, loading, fetchData } = useAPI();
+  const {fetchData } = useAPI();
   const [interview, setInterview] = React.useState({});
   const [candidates, setCandidates] = React.useState([]);
   const [video, setVideo] = React.useState([]);
@@ -83,8 +83,9 @@ export default function VideoCollection() {
   );
   return (
     <div>
-      <AdminDrawer />
-      <div className="adminDrawerOpen">
+      {/*<AdminDrawer />*/}
+      <div /*className="adminDrawerOpen"*/ className="adminpage">
+      <h2>{interview.title_name}</h2>
         <button className="back-button" onClick={goBack}>
           Back
         </button>

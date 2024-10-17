@@ -1,6 +1,7 @@
 import * as React from "react";
 import "../App.css";
 import { useLocation } from "react-router-dom";
+import iview from "../assets/iview.png"
 
 export default function Header() {
   const location = useLocation();
@@ -16,7 +17,7 @@ export default function Header() {
     <>
       {!isLogin && (
         <div className="header">
-          <h3 style={{ textAlign: "center" }}>iView</h3>
+          <img src={iview} alt="logo" className="iviewlogo"/>
         </div>
       )}
     </>

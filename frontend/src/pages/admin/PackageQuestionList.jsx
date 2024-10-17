@@ -3,15 +3,24 @@ import "../../App.css";
 import AdminDrawer from "../../components/AdminDrawer";
 import { useNavigate } from "react-router-dom";
 import AddQuestion from "../../components/AddQuestion";
+import EditQuestion from "../../components/EditQuestion";
 import { useParams } from "react-router-dom";
 import useAPI from "../../store/storeAPI";
 
 export default function PackageQuestionList() {
   const { error, loading, fetchData, setData } = useAPI();
+  const [editOpen, setEditOpen] = React.useState(false);
+  const [editID, setEditID] = React.useState("");
   const { id } = useParams();
   const [questionOpen, setIsOpen] = React.useState(false);
   const [pack, setPackage] = React.useState({});
   const [question, setQuestion] = React.useState([]);
+
+  const handleEdit = (e) => {
+    const edit = e.target.value;
+    setEditID(edit);
+    setEditOpen(true);  // Düzenleme modal'ını açıyoruz
+  };
 
   React.useEffect(() => {
     if (id === undefined) {
@@ -76,6 +85,7 @@ export default function PackageQuestionList() {
 
   const handleOpen = () => setIsOpen(true);
   const handleClose = () => setIsOpen(false);
+  const handleEditClose = () => setEditOpen(false);
 
   const nav = useNavigate();
   const goBack = () => nav(-1);
@@ -103,6 +113,7 @@ export default function PackageQuestionList() {
             onClose={handleClose}
             onChange={handleAddquestion}
           />
+          <EditQuestion isOpen={editOpen} onClose={handleEditClose} val={editID} />
           <br />
           <table className="question-table">
             <thead>
@@ -122,6 +133,13 @@ export default function PackageQuestionList() {
                       <td>{q.question}</td>
                       <td>{q.timer}</td>
                       <td>
+                      <button
+                        value={q?._id}
+                        onClick={handleEdit}
+                        className="edit-button"
+                      >
+                        {editOpen ? "Cancel" : "Edit"}
+                      </button>
                         <button
                           id={index}
                           value={q._id}

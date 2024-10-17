@@ -1,16 +1,20 @@
-import { Request, Response } from 'express';
-import { uploadVideo } from '../services/video';
+import { Request, Response, NextFunction } from "express";
+import { uploadVideoToS3 } from "../services/video";
 
-export const uploadVideoController = async (req: Request, res: Response): Promise<void> => {
+// Video yükleme controller fonksiyonu
+export const uploadVideo = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (!req.file) {
-      res.status(400).json({ message: 'Dosya yüklenmedi' });
-      return;  // return ekleyerek fonksiyonun işlemi sonlandırmasını sağlıyoruz
+      return res.status(400).json({ error: "Dosya yüklenemedi." });
     }
 
-    const result = await uploadVideo(req.file);  // req.file'in var olduğunu kontrol ettik
-    res.json({ message: 'Video başarıyla yüklendi', videoUrl: result.secure_url });
+    const { buffer, originalname, mimetype } = req.file;
+    const result = await uploadVideoToS3(buffer, originalname, mimetype);
+
+    // Başarılı yanıtla URL'yi geri döndür
+    return res.status(200).json({ url: result.Location });
   } catch (error) {
-    res.status(500).json({ message: 'Video yükleme hatası', error });
+    console.error("Video yükleme hatası:", error);
+    next(error); // Hata middleware'ine ilet
   }
 };

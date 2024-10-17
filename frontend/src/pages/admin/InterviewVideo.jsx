@@ -1,6 +1,6 @@
 import * as React from "react";
 import "../../App.css";
-import AdminDrawer from "../../components/AdminDrawer";
+//import AdminDrawer from "../../components/AdminDrawer";
 import ToggleSwitch from "../../components/ToggleSwitch";
 import { useNavigate, useParams } from "react-router-dom";
 import useAPI from "../../store/storeAPI";
@@ -10,7 +10,7 @@ export default function InterviewVideo() {
   const nav = useNavigate();
   const interID = id;
   const candidateID = val;
-  const { error, loading, fetchData, setData } = useAPI();
+  const { fetchData, setData } = useAPI();
   const [interview, setInterview] = React.useState({});
   const [candidate, setCandidate] = React.useState({});
   const [video, setVideo] = React.useState("");
@@ -109,10 +109,8 @@ export default function InterviewVideo() {
 
   return (
     <div>
-      <AdminDrawer />
-      <div className="adminDrawerOpen">
-        {error && <h3>{error}</h3>}
-        {loading && <h3>Loading...</h3>}
+      {/*<AdminDrawer />*/}
+      <div style={{marginTop : "7%"}}/*className="adminDrawerOpen"*/>
         <div className="video-interview-container">
           <div className="video-section">
             <h2>{interview.title_name || "Interview Name"}</h2>

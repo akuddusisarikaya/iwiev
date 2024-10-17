@@ -58,7 +58,7 @@ export default function PackageChange({
         <div>
           <h3>Şu anki Paket: {currentPack.name}</h3>
           <h5>Paket Değiştir:</h5>
-          <select className="changePack" onChange={handlePack}>
+          <select className=" " onChange={handlePack}>
             {packs.map((p) => (
               <option key={p._id} value={p._id}>
                 {p.name}
