@@ -1,34 +1,35 @@
-import express, { application } from 'express';
+import express, { Request, Response } from 'express';
 import dotenv from 'dotenv';
+import cors from 'cors';
 import connectDB from './db';
-import authRoute from './routes/auth'
-import cors from "cors"
-
+import authRoute from './routes/auth';
 import question from './routes/question';
 import qpackage from './routes/package';
 import interview from './routes/interview';
 import candidates from './routes/candidates';
-import videoRoutes from './routes/video';  // Video yükleme rotasını ekledik
+import videoRoutes from './routes/video';  // Video yükleme rotasını ekleyin
 
 dotenv.config();
 
 const app = express();
 const port = process.env.PORT || 3000;
 
-connectDB()
+// MongoDB bağlantısını yap
+connectDB();
 
-app.use(cors())
-app.use(express.json())
+// Middleware'ler
+app.use(cors());
+app.use(express.json());
 
-app.use("/api", authRoute)
-app.use("/api", question)
-app.use("/api", qpackage)
-app.use("/api", interview)
-app.use("/api", candidates)
+// API rotaları
+app.use('/api', authRoute);
+app.use('/api', question);
+app.use('/api', qpackage);
+app.use('/api', interview);
+app.use('/api', candidates);
+app.use('/api', videoRoutes);  // Video yükleme için eklenen yeni route
 
-// Cloudinary video yükleme rotası
-app.use("/api/videos", videoRoutes);  // Video yükleme için eklenen yeni route
-
+// Sunucuyu başlat
 app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
