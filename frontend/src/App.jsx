@@ -15,6 +15,7 @@ function App() {
   const token = sessionStorage.getItem("token")
   return (
     <Router>
+      <Header />
       {/*token !== null && */<Header/>}
       <Routes>
         <Route path="/" element={<LoginPage />} />
@@ -25,6 +26,7 @@ function App() {
         <Route path="/packagequestions/:id" element={/*token !== null && */<PackageQuestionList />} />
         <Route path="/interviewdetail/:id" element={/*token!== null && */ <InterviewQuestions />} />
         <Route path="/interviewpage/:id" element={<InterviewPage />} />
+        
       </Routes>
     </Router>
   );

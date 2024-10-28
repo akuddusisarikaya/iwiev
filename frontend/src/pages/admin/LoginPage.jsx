@@ -1,6 +1,8 @@
 import * as React from "react";
 import "../../App.css";
 import { useNavigate } from "react-router-dom";
+import Header from "../../components/Header";
+import iview from "../../assets/iview.png"
 
 export default function LoginPage() {
   const [error, setError] = React.useState(null);
@@ -40,8 +42,12 @@ export default function LoginPage() {
   };
   return (
     <>
+      <div className="header">
+        <Header />  
+        <img src={iview} alt="Logo" className="iviewlogo" />
+      </div>
       <div className="loginPage">
-        <h2>Login</h2>
+        <h2 class="login-title" > Login</h2>
         {error && <h3>{error}</h3>}
         <h5 className="loginlabel">Email:</h5>
         <input
@@ -50,6 +56,7 @@ export default function LoginPage() {
           label="Email"
           onChange={handleEmail}
           value={email}
+         
         ></input>
         <br />
         <h5 className="loginlabel">Password:</h5>
@@ -61,9 +68,10 @@ export default function LoginPage() {
           value={password}
           type="password"
           onKeyDown={handleEnter}
+          
         ></input>
         <br />
-        <button className="button" onClick={handleLogin}>
+        <button className="button " onClick={handleLogin}>
           {" "}
           Login{" "}
         </button>

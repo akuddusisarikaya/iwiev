@@ -52,26 +52,29 @@ h6{
   margin-left: 10%;
 }
 .iviewlogo{
-  margin-top: 1%;
+  margin-top: 0.50%;
   margin-left: 45%;
   height: 50px;
 }
+
+
 .loginPage{
-  margin:15%;
+  margin:5% auto;
   width: 40%;
-  height: 40vh; 
+  height: 43vh; 
   padding-top: 5%;
   padding-left: 5%;
   padding-bottom: 10%;
-  border: solid 1px black; 
+  border: solid 3px #38817c; 
   border-radius: 2cap;
   box-shadow: 2px 2px silver;
 }
 
 .loginPage button{
   background-color: #3d8d88;
-  color: #f8ca55;
+  color: white;
   margin-left: 25%;
+  margin-top: -10px;
   margin-bottom: 5%;
   width: 30%;
   height: 15%;
@@ -96,19 +99,29 @@ h6{
 .back-button:hover{
   color: silver;
 }
-
+.login-title {
+   /*text-align: left; Metni ortalar */
+  color:#38817c; /* Rengi Sarı olarak ayarlar (Örneğin Sarı: #f8ca55) */
+  font-size: 40px; /* Yazı boyutunu ayarlamak için */
+  margin-bottom: 20px; /* Alt boşluk ekleyerek düzenleme */
+  margin-top: -50px; /* Başlığı yukarı taşımak için negatif değer kullanın */
+  margin-left: 177px;
+  font-family: 'Baloo 2', cursive;
+}
 .loginlabel{
-  font-size: 14px;
+  color:#38817c;
+  font-size: 18px;
   text-align: left;
   margin-left: 10%;
+  font-family: 'Baloo 2', cursive;
 }
 
 .textField{
   margin-bottom: 5%;
-  place-items: center;
+  place-items: left;
   width: 80%;
   min-height: 30px;
-  border: solid 1px black;
+  border: solid 2px #38817c;
   box-shadow: 1px 1px silver;
   border-radius: 2cap;
 }
