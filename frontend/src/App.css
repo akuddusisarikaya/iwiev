@@ -298,11 +298,17 @@ h6{
 /* Sadece Active ve Inactive yazılarının renkleri */
 .status-text.active-text {
   color: #30847f;
+  font-size: 1.2em;
+  margin-top: 5px;
+
 }
 
 .status-text.inactive-text {
   color: #f8ca55;
+  font-size: 1.2em;
+  margin-top: 5px;
 }
+
 .card-delete-button{
   font-family: Montserrat;
   border: 0;
@@ -370,7 +376,7 @@ h6{
 }
 
 .card-title {
-  font-size: 1rem;
+  font-size: 1.3rem;
   margin-top: 10px;
 }
 
