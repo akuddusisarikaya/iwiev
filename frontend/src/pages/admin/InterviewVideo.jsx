@@ -8,7 +8,6 @@ import useAPI from "../../store/storeAPI";
 export default function InterviewVideo() {
   const { id, val } = useParams();
   const nav = useNavigate();
-  const interID = id;
   const candidateID = val;
   const { fetchData, setData } = useAPI();
   const [interview, setInterview] = React.useState({});
@@ -51,18 +50,37 @@ export default function InterviewVideo() {
     }
   });
 
+  // const fetchInterview = async () => {
+  //   const data = await fetchData(`getinterviewbyid/${interID}`, "GET");
+  //   if (data) {
+  //     setInterview(data);
+  //     const candidateData = await fetchData(
+  //       `getcandidatebyid/${candidateID}`,
+  //       "GET"
+  //     );
+  //     if (candidateData) {
+  //       setCandidate(candidateData);
+  //       setVideo(candidateData.video);
+  //     }
+  //   }
+  // };
+
   const fetchInterview = async () => {
-    const data = await fetchData(`getinterviewbyid/${interID}`, "GET");
-    if (data) {
-      setInterview(data);
-      const candidateData = await fetchData(
-        `getcandidatebyid/${candidateID}`,
-        "GET"
-      );
+    try {
+      const data = await fetchData(`signvideo/${candidateID}`, "GET");
+      if (data && data.signedUrl) {
+        setVideo(data.signedUrl);
+      }
+
+      const candidateData = await fetchData(`getcandidatebyid/${candidateID}`, "GET");
       if (candidateData) {
         setCandidate(candidateData);
-        setVideo(candidateData.video);
+
+        console.log("Candidate data:", candidateData);
+        console.log("Signed video URL:", data.signedUrl);
       }
+    } catch (error) {
+      console.error("Error fetching interview data:", error);
     }
   };
 
@@ -98,13 +116,8 @@ export default function InterviewVideo() {
       note: bodyNote,
       status: recWatch,
     };
-    console.log(newBody);
-    const catcherror = await setData(
-      `patchcandidates/${candidateID}`,
-      "PATCH",
-      newBody
-    );
-    console.log(catcherror);
+    console.log("Submitting interview data:", newBody);
+    await setData(`patchcandidates/${candidateID}`, "PATCH", newBody);
   };
 
   return (
@@ -115,10 +128,7 @@ export default function InterviewVideo() {
           <div className="video-section">
             <h2>{interview.title_name || "Interview Name"}</h2>
             <div className="video-player">
-              <video onClick={handleWatched} controls>
-                <source src={video} type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
+              <video onClick={handleWatched} controls preload="auto" alt={candidate._id} type="video/webm" src={video}/>
             </div>
           </div>
           <div className="details-section">

@@ -25,5 +25,5 @@ export const deleteCandidate = async (id: string) => {
 };
 
 export const patchCandidate = async (id : string, data: any) => {
-  return await Candidates.findByIdAndUpdate(id, data);
+  return await Candidates.findByIdAndUpdate(id, data, { new: true });
 }

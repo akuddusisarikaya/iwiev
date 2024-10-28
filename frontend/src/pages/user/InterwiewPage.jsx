@@ -17,14 +17,29 @@ export default function InterviewPage() {
   const [allQuestions, setAllQuestions] = React.useState([]);
   const [modalPen, setModalPen] = React.useState(true);
   const { id } = useParams();
+  const videoRef = React.useRef(null); // VideoRecorder referansı
 
   const handleCandidate = (e) => {
     setCandidate(e);
   };
 
-  const handleStart = () => {
+  // const handleStart = () => {
+  //   setIsStart(true);
+  // };
+
+  const handleStart = async () => {
+    await fetchQuestions();
     setIsStart(true);
+    if (videoRef.current) {
+      videoRef.current.startRecording(); // Video kaydını başlat
+    }
   };
+  const handleFinish = () => {
+    if (videoRef.current) {
+      videoRef.current.stopRecordingAndUpload(); // Video kaydını durdur ve yüklemeyi başlat
+    }
+  };
+
   const handleVideoURL = (e) => {
     setVideoURL(e);
   };
@@ -50,6 +65,7 @@ export default function InterviewPage() {
     try {
       const interData = await fetchData(`getinterviewbyid/${id}`, "GET");
       setInter(interData);
+      console.log("Fetched questions data:", interData);
       if (interData?.question?.length > 0) {
         var newList = [];
         for (let i of interData.question) {
@@ -92,13 +108,19 @@ export default function InterviewPage() {
             Başla
           </button>
           <div style={{ marginLeft: "25%" }}>
-            <VideoRecorder handleURL={handleVideoURL} />
+            <VideoRecorder
+              ref={videoRef}
+              handleURL={handleVideoURL}
+              email={candidate.email}
+            />
           </div>
         </div>
       ) : (
         <div />
       )}
-      <button className="interview-button"> Kaydı Bitir ve Gönder</button>
+      <button onClick={handleFinish} className="interview-button">
+        Kaydı Bitir ve Gönder
+      </button>
     </div>
   );
 }

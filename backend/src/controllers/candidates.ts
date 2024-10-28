@@ -2,6 +2,9 @@
 import { Request, Response } from 'express';
 import * as candidateService from '../services/candidates';
 import Candidates from '../models/candidates';
+import {getSignedUrl} from "@aws-sdk/s3-request-presigner"
+import {GetObjectCommand} from "@aws-sdk/client-s3"
+import { s3Client } from '../config/s3Client';
 
 export const createCandidate = async (req: Request, res: Response): Promise<void> => {
   try {
@@ -61,3 +64,29 @@ export const patchCandidate = async (req: Request, res: Response): Promise<void>
     res.status(500).json({ message: 'Soru paketi güncellenirken hata oluştu', error });
   }
 };
+
+export const signVideo = async(req : Request, res: Response) : Promise<void> => {
+  try{
+    const candidate = await candidateService.getCandidateByID(req.params.id);
+    const video_url = candidate?.video_url;
+    const command = new GetObjectCommand({
+      Bucket: process.env.AWS_BUCKET_NAME,
+      Key: video_url, // S3'te dosyanın anahtarı (ismi)
+    });
+
+    const signedUrl = await getSignedUrl(s3Client, command,{
+      expiresIn: 3600, // URL'nin geçerlilik süresi (saniye cinsinden)
+    })
+    console.log('Signed URL successfully generated:', signedUrl);
+    res.status(200).json({ signedUrl });
+  } catch (error) {
+    // Error tipi `unknown` olduğu için, güvenli bir şekilde işlemek adına kontrol ediyoruz
+    if (error instanceof Error) {
+      console.error('Error signing video URL:', error.message);
+      res.status(500).json({ message: 'Url imzalanırken hata oluştu.', error: error.message });
+    } else {
+      console.error('Unknown error occurred:', error);
+      res.status(500).json({ message: 'Bilinmeyen bir hata oluştu.' });
+    }
+  }
+}

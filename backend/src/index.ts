@@ -12,7 +12,8 @@ import videoRoutes from './routes/video';  // Video yükleme rotasını ekleyin
 dotenv.config();
 
 const app = express();
-const port = process.env.PORT || 3000;
+//const port = process.env.PORT || 3000;
+const port = 3000;
 
 // MongoDB bağlantısını yap
 connectDB();
@@ -28,6 +29,7 @@ app.use('/api', qpackage);
 app.use('/api', interview);
 app.use('/api', candidates);
 app.use('/api', videoRoutes);  // Video yükleme için eklenen yeni route
+app.use(express.urlencoded({ extended: true })); // Form verilerini işler
 
 // Sunucuyu başlat
 app.listen(port, () => {

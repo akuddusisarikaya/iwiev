@@ -1,7 +1,13 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  forwardRef,
+  useImperativeHandle,
+} from "react";
 import axios from "axios";
 
-const VideoRecorder = (handleURL) => {
+const VideoRecorder = forwardRef(({ handleURL, email }, ref) => {
   const [recording, setRecording] = useState(false); // Kayıt durumu
   const [videoURL, setVideoURL] = useState(null); // Video URL'si
   const [uploading, setUploading] = useState(false); // Yükleme durumu
@@ -51,6 +57,11 @@ const VideoRecorder = (handleURL) => {
     getMedia(); // Kamera ve mikrofon erişimini başlat
   }, []);
 
+  useImperativeHandle(ref, () => ({
+    startRecording,
+    stopRecordingAndUpload,
+  }));
+
   // Kayıt başlatma
   const startRecording = () => {
     if (mediaRecorderRef.current) {
@@ -59,8 +70,8 @@ const VideoRecorder = (handleURL) => {
     }
   };
 
-  // Kayıt durdurma
-  const stopRecording = () => {
+  // Kayıt durdurma ve yükleme
+  const stopRecordingAndUpload = () => {
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stop();
       setRecording(false);
@@ -72,18 +83,21 @@ const VideoRecorder = (handleURL) => {
     setUploading(true);
     const formData = new FormData();
     formData.append("video", blob, "recording.webm");
+    formData.append("email", email.trim());
 
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/videos/upload",
+        "http://localhost:3000/api/upload",
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },
         }
       );
+      console.log("response",response.data.url);
       console.log("Video Yüklendi:", response.data.url);
       alert(`Video Yüklendi! URL: ${response.data.url}`);
-      handleURL(`${response.data.url}`)
+      handleURL(response.data.url);
+      // handleURL(`${response.data.url}`)
       setVideoURL(response.data.url); // URL'yi güncelle
     } catch (error) {
       console.error("Video yükleme hatası:", error);
@@ -106,9 +120,9 @@ const VideoRecorder = (handleURL) => {
 
       <div>
         {recording ? (
-          <button onClick={stopRecording}>Kaydı Durdur</button>
+          <button onClick={stopRecordingAndUpload}></button>
         ) : (
-          <button onClick={startRecording}>Kayda Başla</button>
+          <button onClick={startRecording}></button>
         )}
       </div>
 
@@ -116,15 +130,15 @@ const VideoRecorder = (handleURL) => {
 
       {videoURL && (
         <div style={{ marginTop: "20px" }}>
-          <h3>Kaydedilen Video:</h3>
+          {/* <h3>Kaydedilen Video:</h3>
           <video src={videoURL} controls style={{ width: "400px" }} />
           <a href={videoURL} download="recording.webm">
             Kaydı İndir
-          </a>
+          </a> */}
         </div>
       )}
     </div>
   );
-};
+});
 
 export default VideoRecorder;
