@@ -71,7 +71,7 @@ h6{
 }
 
 .loginPage button{
-  background-color: #3d8d88;
+  background-color:#30847f;
   color: white;
   margin-left: 25%;
   margin-top: -10px;
@@ -269,15 +269,39 @@ h6{
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); /* Dinamik kolonlar */
   gap: 20px; /* Kartlar arasındaki boşluk */
   padding: 20px;
+  max-width: 1200px; /* Maksimum genişlik, ihtiyacınıza göre ayarlayın */
+  margin: 0 auto;
+  padding-left: 0px;
+  padding-right: 110px; /* Sağ ve soldan küçük boşluk */
+  box-sizing: border-box; 
 }
 
 .card {
   background-color: #fff;
-  border: 1px solid #ddd;
   border-radius: 10px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   padding: 20px;
   text-align: center;
+  border: 2px solid transparent; /* Varsayılan olarak şeffaf */
+ 
+}
+
+.card.active {
+  border-color: #30847f; /* Aktif kartlar için mavi kenar */
+ 
+}
+
+.card.inactive {
+  border-color: #f8ca55; /* İnaktif kartlar için sarı kenar */
+ 
+}
+/* Sadece Active ve Inactive yazılarının renkleri */
+.status-text.active-text {
+  color: #30847f;
+}
+
+.status-text.inactive-text {
+  color: #f8ca55;
 }
 .card-delete-button{
   font-family: Montserrat;
@@ -314,17 +338,30 @@ h6{
   background-color: silver;
   border-radius: 1cap;
 }
-.block{
+.block.active-block {
   padding-left: 5%;
   text-align: left;
   margin-left: 10%;
   width: 80%;
   height: 30%;
-  background-color: #acddda;
+  background-color: #30847f;
   border-radius: 1cap;
-  border: solid gray 1px;
+  border: solid #30847f 1px;
   box-shadow: 1px 1px silver;
 }
+
+.block.inactive-block {
+  padding-left: 5%;
+  text-align: left;
+  margin-left: 10%;
+  width: 80%;
+  height: 30%;
+  background-color: #f8ca55;
+  border-radius: 1cap;
+  border: solid #f8ca55 1px;
+  box-shadow: 1px 1px silver;
+}
+
 
 .card img {
   width: 100%;

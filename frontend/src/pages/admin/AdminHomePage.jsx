@@ -80,7 +80,7 @@ export default function AdminHomePage() {
   }, [fetchData]); // fetchData bağımlılığı eklendi.
 
   const Card = ({ stat, title, total, holdon, value }) => (
-    <div className="card">
+    <div className={`card ${stat ? "active" : "inactive"}`}>
       <button value={value} onClick={handleDetail} className="card-info-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -140,13 +140,15 @@ export default function AdminHomePage() {
         Delete
       </button>
       <h2 className="card-title">{title}</h2>
-      <h4>Candidates:</h4>
-      <div className="block">
+      <h4 style={{ textAlign: "left", marginLeft: "22px" }}>Candidates:</h4>
+      <div className={`block ${stat ? "active-block" : "inactive-block"}`}>
         <p>Total: {total}</p>
         <p>Hold-on: {holdon}</p>
       </div>
       <div>
-        <h6 style={{ marginBottom: "0px" }}>{stat ? "Active" : "Inactive"}</h6>
+      <h6 className={`status-text ${stat ? "active-text" : "inactive-text"}`} style={{ marginBottom: "0px" }}>
+        {stat ? "Active" : "Inactive"}
+      </h6>
         <button value={value} onClick={seeVideos} className="card-button">
           See Videos →
         </button>
