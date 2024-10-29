@@ -644,9 +644,11 @@ input:checked + .slider:before {
 }
 
 video {
-  width: 100%;
+  width: 45% !important;
   height: auto;
   border-radius: 10px;
+  margin-left: -300px;
+  margin-bottom: -120px;
 }
 
 .details-section {
@@ -1033,14 +1035,14 @@ input:checked + .slider:before {
 }
 
 .questionCard{
-  width: 80%;
+  width: 65%;
   min-height: 15vh;
   margin: 2%;
-  margin-top: 10%;
+  margin-top: -38%;
   border: 20px solid #3d8d88;
   border-radius: 5rcap;
   padding: 2%;
-  margin-left: 8%;
+  margin-left: 25%;
 }
 .cardinfo{
   display: flex;
@@ -1062,5 +1064,6 @@ input:checked + .slider:before {
     background-color: #3d8d88;
     border: none;
     border-radius: 2cap;
+    
   }
 }

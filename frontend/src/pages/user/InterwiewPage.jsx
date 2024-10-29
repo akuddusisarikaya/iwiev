@@ -92,35 +92,23 @@ export default function InterviewPage() {
   };
   return (
     <div className="interview-page">
-      <PersonalInfoForm
-        handleCandi={handleCandidate}
-        isModalOpen={modalPen}
-        onClose={handleModelClose}
-        interid={id}
-      />
+      <PersonalInfoForm handleCandi={handleCandidate}  isModalOpen={modalPen}  onClose={handleModelClose}  interid={id}  />
       {candiOK ? (
         <div style={{ marginTop: "10%" }}>
+          <div style={{ marginLeft: "25%" }}> 
+            <VideoRecorder  ref={videoRef}  handleURL={handleVideoURL}  email={candidate.email}  />          
           {isStart && (
             <QuestionCardList questions={allQuestions} canSkip={true} />
           )}
-          <button onClick={handleStart} className="interview-button">
-            {" "}
-            Başla
-          </button>
-          <div style={{ marginLeft: "25%" }}>
-            <VideoRecorder
-              ref={videoRef}
-              handleURL={handleVideoURL}
-              email={candidate.email}
-            />
+          <div style={{ marginTop: "130px" }}>
+            <button onClick={handleStart} className="interview-button">Başla</button>
+            <button onClick={handleFinish} className="interview-button">Kaydı Bitir ve Gönder</button>
+          </div> 
           </div>
         </div>
       ) : (
         <div />
       )}
-      <button onClick={handleFinish} className="interview-button">
-        Kaydı Bitir ve Gönder
-      </button>
     </div>
   );
 }

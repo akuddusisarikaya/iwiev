@@ -118,7 +118,7 @@ const VideoRecorder = forwardRef(({ handleURL, email }, ref) => {
         style={{ width: "400px", marginBottom: "10px" }}
       />
 
-      <div>
+      <div style={{ marginBottom: "-280px" }}>
         {recording ? (
           <button onClick={stopRecordingAndUpload}></button>
         ) : (
@@ -126,15 +126,25 @@ const VideoRecorder = forwardRef(({ handleURL, email }, ref) => {
         )}
       </div>
 
-      {uploading && <p>Video yükleniyor...</p>}
+      {uploading && (
+        <p style={{ 
+          position: "fixed", 
+          top: "10px", 
+          right: "10px", 
+          color: "white", 
+          padding: "10px", 
+          borderRadius: "5px", 
+          zIndex: 1000 
+        }}>
+          Video yükleniyor...
+        </p>
+      )}
+
+
+
 
       {videoURL && (
-        <div style={{ marginTop: "20px" }}>
-          {/* <h3>Kaydedilen Video:</h3>
-          <video src={videoURL} controls style={{ width: "400px" }} />
-          <a href={videoURL} download="recording.webm">
-            Kaydı İndir
-          </a> */}
+        <div >
         </div>
       )}
     </div>
