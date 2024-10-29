@@ -143,7 +143,7 @@ export default function PersonalInfoForm({
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
-            <h3>Please Enter Your Personal Information</h3>
+          <h3 style={{ color: "#38817c" }}>Please Enter Your Personal Information</h3>
             <div className="form-container">
               <h5 className="interview-text-input">Name:</h5>
               <input

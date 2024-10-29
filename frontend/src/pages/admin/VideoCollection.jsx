@@ -83,12 +83,18 @@ export default function VideoCollection() {
   );
   return (
     <div>
+ 
       {/*<AdminDrawer />*/}
       <div /*className="adminDrawerOpen"*/ className="adminpage">
-      <h2>{interview.title_name}</h2>
-        <button className="back-button" onClick={goBack}>
-          Back
-        </button>
+      <button className="back-button" onClick={goBack}>
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" 
+          style={{ width: "24px", height: "24px",  marginLeft: "-230" }} // İkonun boyutunu burada ayarlayın
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+        </svg>
+      </button>
+      <h2 style={{ marginTop: "-95px" }} >{interview.title_name}</h2>
         <div className="grid-container">
           {video !== null ? (
             video.map((v, index) => (

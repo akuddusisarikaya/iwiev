@@ -92,7 +92,7 @@ h6{
   border: none;
   font-size: large;
   text-transform: uppercase;
-  margin-left: 5%;
+  margin-left: 3%;
   margin-bottom: 5%;
 }
 
@@ -274,6 +274,8 @@ h6{
   padding-left: 0px;
   padding-right: 110px; /* Sağ ve soldan küçük boşluk */
   box-sizing: border-box; 
+
+  
 }
 
 .card {
@@ -423,14 +425,14 @@ h6{
 .modal-content {
   background-color: #fff;
   margin: 15% auto; 
-  margin-top: 5%;
+  margin-top: 3%;
   padding: 20px;
   padding-top: 0;
-  border: 1px solid #888;
   width: 90%;
   max-width: 500px; 
   border-radius: 8px;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  border: solid 3px #38817c;
 }
 
 .close {
@@ -576,11 +578,11 @@ input:checked + .slider:before {
   width: 150px;
   height: 50px;
   background-color: white;
-  border: solid 1px silver;
+  border: solid 1px #38817c;
   border-radius: 2cap;
 }
 .modal-submit-button:hover{
-  background-color: silver;
+  background-color: #38817c;
   border-radius: 2cap;
 }
 
@@ -638,6 +640,7 @@ input:checked + .slider:before {
   height: auto;
   border-radius: 10px;
   overflow: hidden;
+  margin-top: 30px;
 }
 
 video {
@@ -651,6 +654,7 @@ video {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  margin-top: -20px; 
 }
 
 .details-section h3 {
@@ -659,7 +663,7 @@ video {
 }
 
 .notes-section {
-  margin-bottom: 20px;
+  margin-bottom: 0px;
 }
 
 textarea {
@@ -803,7 +807,7 @@ input:checked + .slider:before {
 
 .question-table-container {
   width: 90%;
-  margin: 20px auto;
+  margin: -40px auto;
   background-color: white;
   border-radius: 10px;
   padding: 20px;
@@ -895,15 +899,21 @@ input:checked + .slider:before {
 
 .interview-text-input{
   margin-left: 10%;
+  font-size: 20px;
+  color: #30847f
+  
 }
 .interview-text-field{
-  margin: 1% 5%;
+  margin: -10px 5% -2% 5%;
   width: 90%;
   height: 30px;
+  border-radius: 1cap;
+  border: solid 1px #38817c;
 }
 
 .interview-page{
   margin-top:2%;
+  
 }
 
 .interview-question-numb{

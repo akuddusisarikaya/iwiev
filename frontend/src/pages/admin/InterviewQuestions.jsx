@@ -182,10 +182,16 @@ export default function InterviewQuestions() {
   return (
     <div>
       {/*<AdminDrawer />*/}
-      <div /*className="adminDrawerOpen"*/ style={{marginTop: "7%"}}>
+      <div style={{ marginTop: "7%" }}>
         <button className="back-button" onClick={goBack}>
-          Back
+        <svg 
+          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" 
+          style={{ width: "24px", height: "24px" }} // İkonun boyutunu burada ayarlayın
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+        </svg>
         </button>
+
         <div className="question-table-container">
           <h3>{interview.title_name}</h3>
           <ToggleSwitch

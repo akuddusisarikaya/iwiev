@@ -49,17 +49,18 @@ export default function LoginPage() {
       <div className="loginPage">
         <h2 class="login-title" > Login</h2>
         {error && <h3>{error}</h3>}
-        <h5 className="loginlabel">Email:</h5>
+        <h5 className="loginlabel">Email Address</h5>
         <input
           className="textField"
           key="email"
           label="Email"
           onChange={handleEmail}
           value={email}
+          placeholder="   Enter email"
          
         ></input>
         <br />
-        <h5 className="loginlabel">Password:</h5>
+        <h5 className="loginlabel">Password</h5>
         <input
           className="textField"
           key="password"
@@ -68,6 +69,7 @@ export default function LoginPage() {
           value={password}
           type="password"
           onKeyDown={handleEnter}
+          placeholder="   Enter Password"
           
         ></input>
         <br />

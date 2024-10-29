@@ -126,7 +126,17 @@ export default function InterviewVideo() {
       <div style={{marginTop : "7%"}}/*className="adminDrawerOpen"*/>
         <div className="video-interview-container">
           <div className="video-section">
-            <h2>{interview.title_name || "Interview Name"}</h2>
+          <button className="back-button" onClick={goBack} style={{ position: "absolute", top: "100px", left: "10px" }}>         
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" 
+              style={{ width: "24px", height: "24px" }} // İkonun boyutunu burada ayarlayın
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 0 1 0 12h-3" />
+            </svg>
+          </button>
+          <h2 style={{ marginTop: "-63px", marginLeft: "30px" }}>
+            {interview.title_name || "Interview Name"}
+          </h2>
             <div className="video-player">
               <video onClick={handleWatched} controls preload="auto" alt={candidate._id} type="video/webm" src={video}/>
             </div>
@@ -137,9 +147,9 @@ export default function InterviewVideo() {
                 " " +
                 (candidate.surname || "CandidateSurname")}
             </h3>
-            <h6>{candidateStat}</h6>
-            <div className="notes-section">
-              <label>Email: </label>
+            <h6 style={{ marginTop: "0px", fontSize: "15px" }}> Status: {candidateStat}</h6>
+            <div className="notes-section" style={{ marginTop: "-30px" }}>
+              <label >Email: </label>
               <input
                 className="candiInfo"
                 disabled
