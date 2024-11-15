@@ -109,22 +109,23 @@ const VideoRecorder = forwardRef(({ handleURL, email }, ref) => {
 
   return (
     <div>
-      <h2>Video Kaydedici</h2>
+      <div>
+       {/* <h2 style={{ marginTop: "-140px" }}>Video Kaydedici</h2>   */}
+      </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <video
         ref={videoRef}
         autoPlay
         muted
-        style={{ width: "400px", marginBottom: "10px" }}
+        style={{ width: "529px", marginBottom: "34px", marginTop:"-390px", marginLeft: "-250px", borderRadius:"10px" }}
       />
-
-      <div style={{ marginBottom: "-280px" }}>
+      {/* <div style={{ marginBottom: "-280px" }}>
         {recording ? (
           <button onClick={stopRecordingAndUpload}></button>
         ) : (
           <button onClick={startRecording}></button>
         )}
-      </div>
+      </div> */}
 
       {uploading && (
         <p style={{ 
@@ -139,10 +140,6 @@ const VideoRecorder = forwardRef(({ handleURL, email }, ref) => {
           Video yükleniyor...
         </p>
       )}
-
-
-
-
       {videoURL && (
         <div >
         </div>

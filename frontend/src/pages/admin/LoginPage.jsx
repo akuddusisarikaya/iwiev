@@ -1,8 +1,7 @@
+// pages/admin/LoginPage.jsx
 import * as React from "react";
 import "../../App.css";
 import { useNavigate } from "react-router-dom";
-import Header from "../../components/Header";
-import iview from "../../assets/iview.png"
 
 export default function LoginPage() {
   const [error, setError] = React.useState(null);
@@ -11,14 +10,15 @@ export default function LoginPage() {
   const nav = useNavigate();
 
   const handleEnter = (e) => {
-    if(e.key === "Enter"){
+    if (e.key === "Enter") {
       handleLogin();
     }
-  }
+  };
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
   };
+
   const handlePassword = (e) => {
     setPassword(e.target.value);
   };
@@ -40,14 +40,11 @@ export default function LoginPage() {
       setError(error.message);
     }
   };
+
   return (
-    <>
-      <div className="header">
-        <Header />  
-        <img src={iview} alt="Logo" className="iviewlogo" />
-      </div>
+    <div className="loginBody">
       <div className="loginPage">
-        <h2 class="login-title" > Login</h2>
+        <h2 className="login-title">Login</h2>
         {error && <h3>{error}</h3>}
         <h5 className="loginlabel">Email Address</h5>
         <input
@@ -57,8 +54,7 @@ export default function LoginPage() {
           onChange={handleEmail}
           value={email}
           placeholder="   Enter email"
-         
-        ></input>
+        />
         <br />
         <h5 className="loginlabel">Password</h5>
         <input
@@ -70,14 +66,12 @@ export default function LoginPage() {
           type="password"
           onKeyDown={handleEnter}
           placeholder="   Enter Password"
-          
-        ></input>
+        />
         <br />
-        <button className="button " onClick={handleLogin}>
-          {" "}
-          Login{" "}
+        <button className="button" onClick={handleLogin}>
+          Login
         </button>
       </div>
-    </>
+    </div>
   );
 }

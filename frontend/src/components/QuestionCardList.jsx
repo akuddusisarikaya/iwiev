@@ -22,11 +22,52 @@ const Card = ({ question, time, onNextQuestion, canSkip }) => {
   }, [remainingTime, onNextQuestion]);
 
   return (
-    <div className="questionCard">
-      <h3>{question}</h3>
-      <p>Kalan Süre: {remainingTime} saniye</p>
-      {canSkip && <button className="card-button" onClick={onNextQuestion}>Bu Soruyu Geç</button>}
-    </div>
+  <div className="candidateQuestionCard">
+    <h3>{question}</h3>
+    <p
+      style={{
+        position: "absolute",
+        top: "131px",
+        right: "209px",
+        margin: "0",
+        padding: "5px",
+        backgroundColor: "rgba(255, 255, 255, 0.8)", // Yarı saydam arka plan
+        borderRadius: "5px",
+        fontSize: "14px",
+        fontWeight: "bold",
+        color: "#333",
+      }}
+    >
+      Kalan Süre: {remainingTime} saniye
+    </p>
+    {canSkip && (
+      <button
+        style={{
+          fontFamily: "Montserrat",
+          width: "35%",
+          height: "5vh",
+          backgroundColor: "#3d8d88",
+          border: "none",
+          borderRadius: "2cap",
+          cursor: "pointer",
+          marginTop: "187px",
+          color: "white",
+          marginLeft: "20px",
+        }}
+        onClick={onNextQuestion}
+        onMouseEnter={(e) => {
+          e.target.style.backgroundColor = "#79C9C4";
+          e.target.style.color = "white";
+        }}
+        onMouseLeave={(e) => {
+          e.target.style.backgroundColor = "#3d8d88";
+          e.target.style.color = "white";
+        }}
+      >
+        Bu Soruyu Geç
+      </button>
+    )}
+  </div>
   );
 };
 
@@ -50,7 +91,7 @@ export default function QuestionCardList({ questions, canSkip }) {
     <div>
       <Card
         className="questionCard"
-        question={questions[currentIndex].question}
+        question={`Soru:  ${questions[currentIndex].question}`}
         time={questions[currentIndex].timer}
         onNextQuestion={handleNextQuestion}
         canSkip={canSkip}

@@ -42,11 +42,13 @@ export default function InterviewVideo() {
 
   React.useEffect(() => {
     if (candidate?.status && candidate.status.length > 3) {
+      console.log("Candidate status:", candidate.status);
       if (candidate.status === "rejected" || candidate.status === "approved") {
         setWatched(true);
       }
       var stat = candidate.status.toString();
       setCandidateStat(capitalize(stat));
+      console.log("Candidate status:", candidate.status);
     }
   });
 
@@ -79,10 +81,16 @@ export default function InterviewVideo() {
         console.log("Candidate data:", candidateData);
         console.log("Signed video URL:", data.signedUrl);
       }
+
+      const İnterwiewData = await fetchData(`getinterviewbyid/${candidateData.interview}`, "GET");
+      setInterview(İnterwiewData);
+      console.log("Interview data:", İnterwiewData);
+
     } catch (error) {
       console.error("Error fetching interview data:", error);
     }
   };
+  
 
   const goBack = () => {
     nav(-1);
@@ -96,37 +104,48 @@ export default function InterviewVideo() {
     }
   }, [id, val]);
 
-  React.useEffect(() => {
-    if (watched) {
-      if (reject === false && approve === false) {
-        setRecWatch("watched");
-      } else if (reject === true) {
-        setRecWatch("rejected");
-      } else if (approve === true) {
-        setRecWatch("approved");
-      }
-    }
-  }, [reject, approve, watched]);
+  // React.useEffect(() => {
+  //   if (watched) {
+  //     if (reject === false && approve === false) {
+  //       setRecWatch("watched");
+  //     } else if (reject === true) {
+  //       setRecWatch("rejected");
+  //     } else if (approve === true) {
+  //       setRecWatch("approved");
+  //     }
+  //   }
+  // }, [reject, approve, watched]);
 
   const submitInterview = async () => {
-    console.log(recWatch);
+    const currentStatus = approve
+      ? "approved"
+      : reject
+      ? "rejected"
+      : watched
+      ? "watched"
+      : "";
+  
     const bodyNote =
       savedNote && savedNote.length > 0 ? savedNote : candidate.note;
+  
     const newBody = {
       note: bodyNote,
-      status: recWatch,
+      status: currentStatus,
     };
+  
     console.log("Submitting interview data:", newBody);
+  
     await setData(`patchcandidates/${candidateID}`, "PATCH", newBody);
+    alert("Değişiklikler kaydedildi.");
   };
-
+  
   return (
     <div>
       {/*<AdminDrawer />*/}
-      <div style={{marginTop : "7%"}}/*className="adminDrawerOpen"*/>
+      <div style={{marginTop : "4%"}}/*className="adminDrawerOpen"*/>
         <div className="video-interview-container">
           <div className="video-section">
-          <button className="back-button" onClick={goBack} style={{ position: "absolute", top: "100px", left: "10px" }}>         
+          <button className="back-button" onClick={goBack} style={{ position: "absolute", top: "85px", left: "30px", background:"none" }}>         
             <svg 
               xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" 
               style={{ width: "24px", height: "24px" }} // İkonun boyutunu burada ayarlayın
@@ -134,11 +153,11 @@ export default function InterviewVideo() {
               <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 0 1 0 12h-3" />
             </svg>
           </button>
-          <h2 style={{ marginTop: "-63px", marginLeft: "30px" }}>
+          <h2 style={{ marginTop: "-43px", marginLeft: "50px" }}>
             {interview.title_name || "Interview Name"}
           </h2>
             <div className="video-player">
-              <video onClick={handleWatched} controls preload="auto" alt={candidate._id} type="video/webm" src={video}/>
+              <video onClick={handleWatched} controls preload="auto" alt={candidate._id} type="video/webm" src={video} style={{ width: "58%", height: "430px", marginLeft:"50px" }}/>
             </div>
           </div>
           <div className="details-section">
@@ -147,7 +166,7 @@ export default function InterviewVideo() {
                 " " +
                 (candidate.surname || "CandidateSurname")}
             </h3>
-            <h6 style={{ marginTop: "0px", fontSize: "15px" }}> Status: {candidateStat}</h6>
+            <h6 style={{ marginTop: "0px", fontSize: "15px" }}> Status: {candidate.status}</h6>
             <div className="notes-section" style={{ marginTop: "-30px" }}>
               <label >Email: </label>
               <input
@@ -155,6 +174,7 @@ export default function InterviewVideo() {
                 disabled
                 placeholder={candidate.email || "Email Information"}
                 rows="8"
+                style={{ marginLeft: "5px" }}
               />
               <label>Phone: </label>
               <input
@@ -172,18 +192,12 @@ export default function InterviewVideo() {
                 rows="8"
               ></textarea>
             </div>
-            <ToggleSwitch
-              onChange={handleApprove}
-              value={approve}
-              label={"Approve :"}
-            />
-            <ToggleSwitch
-              onChange={handleReject}
-              value={reject}
-              label={"Reject:"}
-            />
+            <div style={{ display: "flex", alignItems: "center", gap: "40px" }}>
+              <ToggleSwitch onChange={handleApprove} value={approve} label={"Approve:"} />
+              <ToggleSwitch onChange={handleReject} value={reject} label={"Reject:"} />
+            </div>
             <br />
-            <button onClick={submitInterview} className="save-button">
+            <button onClick={submitInterview} className="save-button" style={{ marginTop:"-15px"}}>
               Save
             </button>
           </div>

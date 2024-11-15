@@ -91,24 +91,75 @@ export default function InterviewPage() {
     setModalPen(false);
   };
   return (
-    <div className="interview-page">
-      <PersonalInfoForm handleCandi={handleCandidate}  isModalOpen={modalPen}  onClose={handleModelClose}  interid={id}  />
+    <div className="interview-page">    
+      <PersonalInfoForm
+        handleCandi={handleCandidate}
+        isModalOpen={modalPen}
+        onClose={handleModelClose}
+        interid={id}
+      />
       {candiOK ? (
-        <div style={{ marginTop: "10%" }}>
-          <div style={{ marginLeft: "25%" }}> 
-            <VideoRecorder  ref={videoRef}  handleURL={handleVideoURL}  email={candidate.email}  />          
-          {isStart && (
-            <QuestionCardList questions={allQuestions} canSkip={true} />
-          )}
-          <div style={{ marginTop: "130px" }}>
-            <button onClick={handleStart} className="interview-button">Başla</button>
-            <button onClick={handleFinish} className="interview-button">Kaydı Bitir ve Gönder</button>
-          </div> 
+        <div
+          style={{
+            marginTop: "1%",
+            border: "5px solid #38817c",
+            borderRadius: "10px",
+            width: "77%",
+            height: "540px",
+            marginLeft: "auto",
+            marginRight: "auto",
+          }}
+        >
+          <div style={{ marginTop: "10%" }}>
+            <div style={{ marginLeft: "25%" }}>
+              <div
+                style={{
+                  marginTop: "420px", // Butonu aşağı almak için ekledim
+                  textAlign: "center", // Ortalamak için
+                }}
+              >
+                <button
+                  onClick={!isStart ? handleStart : handleFinish}
+                  className="interview-button"
+                  style={{
+                    marginLeft: !isStart ? "35%" : "60%", // Başla biraz solda, Kaydı Bitir ve Gönder sağda
+                    marginBottom: "2%",
+                    width: "25%",
+                    height: "5vh",
+                    backgroundColor: "#3d8d88",
+                    border: "none",
+                    borderRadius: "2cap",
+                    color: "white",
+                  }}
+                  onMouseEnter={(e) => {
+                    e.target.style.backgroundColor = "#79C9C4";
+                    e.target.style.color = "white";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.backgroundColor = "#3d8d88";
+                    e.target.style.color = "white";
+                  }}
+                >
+                  {!isStart ? "Başla" : "Kaydı Bitir ve Gönder"}
+                </button>
+              </div>
+              <div className="videoRecorder">
+                <VideoRecorder
+                  className="videoRecorder"
+                  ref={videoRef}
+                  handleURL={handleVideoURL}
+                  email={candidate.email}
+                />
+              </div>
+              {isStart && (
+                <QuestionCardList questions={allQuestions} canSkip={true} />
+              )}
+            </div>
           </div>
         </div>
       ) : (
         <div />
       )}
     </div>
-  );
+  );   
 }

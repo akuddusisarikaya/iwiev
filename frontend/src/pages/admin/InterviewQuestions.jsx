@@ -37,13 +37,13 @@ export default function InterviewQuestions() {
   };*/
 
   const handleEdit = (e) => {
-    if(interview.candidates.length>0){
+    if (interview.candidates.length > 0) {
       alert("Bu mülakattaki soruları değiştiremezsiniz.");
       return;
     }
     const edit = e.target.value;
     setEditID(edit);
-    setEditOpen(true);  // Düzenleme modal'ını açıyoruz
+    setEditOpen(true); // Düzenleme modal'ını açıyoruz
   };
 
   const nav = useNavigate();
@@ -64,9 +64,9 @@ export default function InterviewQuestions() {
   };
 
   const handleRec = async (quest) => {
-    if(interview.candidates.length > 0){
-      alert("Bu mülakata yeni kayıt yapamazsınız.")
-      return
+    if (interview.candidates.length > 0) {
+      alert("Bu mülakata yeni kayıt yapamazsınız.");
+      return;
     }
     //"quest" değeri kayıttan sonra oluşturulan yeni question ın id değeri!!
     var newArr = [...interviewQuestions, quest];
@@ -79,15 +79,15 @@ export default function InterviewQuestions() {
 
   // Soru silme işlevi
   const handleDelete = async (e) => {
-    if(interview.candidates.length > 0 ){
+    if (interview.candidates.length > 0) {
       alert("Bu mülakattaki soruları silemezsiniz.");
       return;
     }
     const delID = e.target.value;
-      const newIntQuestions = interviewQuestions;
-      interviewQuestions.splice(interviewQuestions.indexOf(delID), 1);
-      const newBody = { question: newIntQuestions };
-      await setData(`updateinterview/${id}`, "PUT", newBody);
+    const newIntQuestions = interviewQuestions;
+    interviewQuestions.splice(interviewQuestions.indexOf(delID), 1);
+    const newBody = { question: newIntQuestions };
+    await setData(`updateinterview/${id}`, "PUT", newBody);
     await fetchData(`deletequestion/${delID}`, "DELETE");
 
     loadPage();
@@ -96,12 +96,12 @@ export default function InterviewQuestions() {
 
   const loadPage = async () => {
     const interData = await fetchData(`getinterviewbyid/${id}`, "GET");
-    if(interData){
+    if (interData) {
       setInterview(interData);
-      if(interData?.question && interData?.question?.length > 0){
+      if (interData?.question && interData?.question?.length > 0) {
         setInterviewQuestions(interData.question);
         var list = [];
-        for(let i of interData.question){
+        for (let i of interData.question) {
           try {
             const questData = await fetchData(`getquestionbyid/${i}`, "GET");
             list.push(questData);
@@ -112,7 +112,7 @@ export default function InterviewQuestions() {
         setQuestions(list);
       }
     }
-  }
+  };
 
   /*const loadPage = async () => {
     if (id === undefined || id === "undefined") {
@@ -170,11 +170,11 @@ export default function InterviewQuestions() {
   }, [id, fetchData]);
 
   const handleOpen = () => {
-    if(interview.candidates.length > 0 ){
+    if (interview.candidates.length > 0) {
       alert("Bu mülakata soru ekleyemezsiniz.");
       return;
     }
-    setIsOpen(true)
+    setIsOpen(true);
   };
   const handleClose = () => setIsOpen(false);
   const handleEditClose = () => setEditOpen(false);
@@ -183,13 +183,25 @@ export default function InterviewQuestions() {
     <div>
       {/*<AdminDrawer />*/}
       <div style={{ marginTop: "7%" }}>
-        <button className="back-button" onClick={goBack}>
-        <svg 
-          xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" 
-          style={{ width: "24px", height: "24px" }} // İkonun boyutunu burada ayarlayın
+        <button
+          style={{ backgroundColor: "#c0c9c0" }}
+          className="back-button"
+          onClick={goBack}
         >
-          <path strokeLinecap="round" strokeLinejoin="round" d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 0 1 0 12h-3" />
-        </svg>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="1.5"
+            stroke="currentColor"
+            style={{ width: "24px", height: "24px" }} // İkonun boyutunu burada ayarlayın
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M9 15L3 9m0 0l6-6M3 9h12a6 6 0 0 1 0 12h-3"
+            />
+          </svg>
         </button>
 
         <div className="question-table-container">
@@ -210,7 +222,11 @@ export default function InterviewQuestions() {
             onClose={handleClose}
             onChange={handleRec}
           />
-          <EditQuestion isOpen={editOpen} onClose={handleEditClose} val={editID} />
+          <EditQuestion
+            isOpen={editOpen}
+            onClose={handleEditClose}
+            val={editID}
+          />
           {/*<button
             onClick={packModal ? handlePackModalClose : handlePackModalOpen}
             className="add-button2"
@@ -249,6 +265,7 @@ export default function InterviewQuestions() {
                         className="edit-button"
                       >
                         {editOpen ? "Cancel" : "Edit"}
+                        
                       </button>
                       <button
                         id={index}
@@ -256,7 +273,18 @@ export default function InterviewQuestions() {
                         onClick={handleDelete}
                         className="delete-button"
                       >
-                        Delete
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 16 16"
+                          fill="currentColor"
+                          style={{ width: "21px", height: "27px" }}
+                        >
+                          <path
+                            fillRule="evenodd" 
+                            d="M5 3.25V4H2.75a.75.75 0 0 0 0 1.5h.3l.815 8.15A1.5 1.5 0 0 0 5.357 15h5.285a1.5 1.5 0 0 0 1.493-1.35l.815-8.15h.3a.75.75 0 0 0 0-1.5H11v-.75A2.25 2.25 0 0 0 8.75 1h-1.5A2.25 2.25 0 0 0 5 3.25Zm2.25-.75a.75.75 0 0 0-.75.75V4h3v-.75a.75.75 0 0 0-.75-.75h-1.5ZM6.05 6a.75.75 0 0 1 .787.713l.275 5.5a.75.75 0 0 1-1.498.075l-.275-5.5A.75.75 0 0 1 6.05 6Zm3.9 0a.75.75 0 0 1 .712.787l-.275 5.5a.75.75 0 0 1-1.498-.075l.275-5.5a.75.75 0 0 1 .786-.711Z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
                       </button>
                     </td>
                   </tr>

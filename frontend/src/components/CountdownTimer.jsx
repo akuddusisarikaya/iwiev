@@ -21,10 +21,26 @@ const CountdownTimer = ({ totalTimeInMinutes }) => {
   };
 
   return (
-    <div>
-      <h2>Kalan Süre: {formatTime(timeLeft)}</h2>
-      {timeLeft <= 0 && <p>Süre doldu!</p>}
-    </div>
+  <div>
+    <h2
+      style={{
+        position: "absolute",
+        top: "10px",
+        right: "10px",
+        margin: "0",
+        padding: "5px",
+        backgroundColor: "rgba(255, 255, 255, 0.8)", // Arka planı belirginleştirmek için
+        borderRadius: "5px",
+        color: "#333", // Yazı rengi
+        fontSize: "16px",
+        fontWeight: "bold",
+      }}
+    >
+      Kalan Süreeee: {formatTime(timeLeft)}
+    </h2>
+    {timeLeft <= 0 && <p>Süre doldu!</p>}
+  </div>
+
   );
 };
 
