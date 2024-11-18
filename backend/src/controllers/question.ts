@@ -19,7 +19,6 @@ export const getQuestionsByID = async (
   res: Response
 ): Promise<void> => {
   const { id } = req.params;
-  console.log(id)
   try {
     const question = await questionService.getQuestionByID(id);
     if (!question) {
